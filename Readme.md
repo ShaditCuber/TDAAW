@@ -28,10 +28,10 @@ Sigue estos pasos:
 
 ```shell
 # Clona este repositorio en tu máquina local usando Git:
-git clone https://github.com/usuario_felipe/tinder-para-perritos.git
+git clone https://github.com/ShaditCuber/TDAAW.git
 
 # Navega al directorio del proyecto:
-cd tinder-para-perritos
+cd TDAAW
 
 # Instala las dependencias del proyecto:
 npm install
