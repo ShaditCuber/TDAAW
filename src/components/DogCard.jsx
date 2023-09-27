@@ -1,13 +1,18 @@
+import { Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
 
-// eslint-disable-next-line react/prop-types
-export default function DogCard({ name, description, image }) {
-    console.log(name)
+function DogCard({ dog, onUndo }) {
     return (
-        <div className="card">
-            <img src={image} alt={name} />
-            <h2>{name}</h2>
-            <p>{description}</p>
-        </div>
-
+        <Card sx={{ position: 'relative' }}>
+            <CardMedia component="img" alt="Dog" height="150" image={dog.image} />
+            <CardContent sx={{
+                backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 2, position: 'absolute',
+                top: 0,
+            }}>
+                <Typography variant="h6" color='white'>{dog.name}</Typography>
+                <Button onClick={onUndo}>Arrepentirse</Button>
+            </CardContent>
+        </Card>
     );
 }
+
+export default DogCard;
