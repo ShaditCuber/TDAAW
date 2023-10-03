@@ -34,10 +34,6 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
     const [isLoadingImage, setIsLoadingImage] = useState(false);
 
 
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
-
     const fetchDog = async () => {
         setIsLoadingImage(true);
 
@@ -96,7 +92,7 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
                         zIndex: 1,
                     }}
                     image={dog.image}
-                    alt="Dog"
+                    alt="Error al cargar la imagen"
                 />
 
                 <CardContent
