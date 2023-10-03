@@ -17,7 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Button, LinearProgress } from '@mui/material';
+import { Button, CircularProgress, LinearProgress } from '@mui/material';
 import axios from 'axios';
 import { useSwipeable } from 'react-swipeable';
 import zIndex from '@mui/material/styles/zIndex';
@@ -29,26 +29,27 @@ const generateRandomName = () => {
     return Math.random().toString(36).substring(2, 8);
 };
 
-export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, isMain, dogData }) {
+export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, isMain, dogData , arrepentirse , target}) {
     const [expanded, setExpanded] = useState(false);
     const [isLoadingImage, setIsLoadingImage] = useState(false);
 
-  
+
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
     const fetchDog = async () => {
-        // const { data } = await axios.get('https://dog.ceo/api/breeds/image/random');
         setIsLoadingImage(true);
-        const { data } = await axios.get('https://api.thecatapi.com/v1/images/search');
+
+        const { data } = await axios.get('https://dog.ceo/api/breeds/image/random');
+        // const { data } = await axios.get('https://api.thecatapi.com/v1/images/search');
         setTimeout(() => {
             setIsLoadingImage(false);
         }, 1000);
         return data;
     };
 
-    const { data, isLoading, refetch } = useQuery(['currentDog'], fetchDog, { refetchOnWindowFocus: false });
+    const { data, isLoading, refetch , isError } = useQuery(['currentDog'], fetchDog, { refetchOnWindowFocus: false });
 
     useEffect(() => {
         refetch();
@@ -59,9 +60,9 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
 
     let dog = {
         name: generateRandomName(),
-        // image: data.message,
-        image: data[0].url,
-        description: 'Lorem ipsum...' 
+        image: data.message,
+        // image: data[0].url,
+        description: 'Lorem ipsum...'
     };
 
     if (dogData) {
@@ -71,112 +72,119 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
 
 
 
-    const styles = isMain ? { width: 345, height: 500, position: 'relative', borderRadius: '70px' } : { width: 345, height: 250, position: 'relative'}
+    const styles = isMain ? { width: 345, height: 500, position: 'relative', borderRadius: '70px', maxWidth: 346 } : { maxWidth: 345, height: 300, position: 'relative', marginBottom: '20px' }
 
     const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
-        <Card sx={styles}>
+        <>
+            {isLoadingImage && <CircularProgress />} 
 
-            <CardMedia
-                component="img"
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    zIndex: 1,
-                }}
-                image={dog.image}
-                alt="Dog"
-            />
+            <Card sx={styles}>
 
-            <CardContent
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    width: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-                    zIndex: 2
-                }}
-            >
-                <Typography variant={fontSizeResponsive} color="white" sx={{ fontWeight: 'bold' }}>
-                    {dog.name}
-                </Typography>
-                <Typography variant="body2" color="white" sx={{ fontWeight: 'medium' }}>
-                    {dog.description}
-                </Typography>
-            </CardContent>
-
-            {isMain ? <CardActions
-                disableSpacing
-                sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    zIndex: 2,
-                    padding: '15px'
-                }}
-            >
-                <IconButton
-                    aria-label="like"
-                    onClick={() => onLike(dog)}
-                    disabled={isLoadingImage}  
+                <CardMedia
+                    component="img"
                     sx={{
-                        backgroundColor: 'gray',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        zIndex: 1,
+                    }}
+                    image={dog.image}
+                    alt="Dog"
+                />
 
-                        color: 'pink',
-                        '&:hover': {
-                            color: 'green',
-                            fontSize: '100px',
-                            backgroundColor: 'white ',
-
-                        }
+                <CardContent
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        width: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        zIndex: 2
                     }}
                 >
-                    <FavoriteIcon style={{ fontSize: 60 }} />
-                </IconButton>
-                <IconButton
-                    aria-label="dislike"
-                    onClick={() => onDislike(dog)}
-                    disabled={isLoadingImage}  
+                    <Typography variant={fontSizeResponsive} color="white" sx={{ fontWeight: 'bold' }}>
+                        {dog.name}
+                    </Typography>
+                    <Typography variant="body2" color="white" sx={{ fontWeight: 'medium' }}>
+                        {dog.description}
+                    </Typography>
+                </CardContent>
+
+                {isMain ? <CardActions
+                    disableSpacing
                     sx={{
-                        color: 'red',
-                        backgroundColor: 'gray',
-                        '&:hover': {
-                            color: 'red',
-                            fontSize: '100px',
-                            backgroundColor: 'white',
-
-                        },
-                        marginRight: '30px'  
-
-                    }}
-                >
-                    <CloseIcon style={{ fontSize: 60 }} />
-                </IconButton>
-            </CardActions>
-                :
-                <IconButton sx={
-                    {
-                        zIndex: 2,
                         position: 'absolute',
                         bottom: 0,
                         width: '100%',
-                        color: 'red',
-                        background : 'gray',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        zIndex: 2,
+                        padding: '15px'
+                    }}
+                >
+                    <IconButton
+                        aria-label="like"
+                        onClick={() => onLike(dog)}
+                        disabled={isLoadingImage}
+                        sx={{
+                            backgroundColor: 'gray',
+
+                            color: 'pink',
+                            '&:hover': {
+                                color: 'green',
+                                fontSize: '100px',
+                                backgroundColor: 'white ',
+
+                            }
+                        }}
+                    >
+                        <FavoriteIcon style={{ fontSize: 60 }} />
+                    </IconButton>
+                    <IconButton
+                        aria-label="dislike"
+                        onClick={() => onDislike(dog)}
+                        disabled={isLoadingImage}
+                        sx={{
+                            color: 'red',
+                            backgroundColor: 'gray',
+                            '&:hover': {
+                                color: 'red',
+                                fontSize: '100px',
+                                backgroundColor: 'white',
+
+                            },
+                            marginRight: '30px'
+
+                        }}
+                    >
+                        <CloseIcon style={{ fontSize: 60 }} />
+                    </IconButton>
+                </CardActions>
+                    :
+                    <IconButton sx={
+                        {
+                            zIndex: 2,
+                            position: 'absolute',
+                            bottom: 0,
+                            width: '100%',
+                            color: 'red',
+                            background: 'gray',
+                        }
+                        
                     }
+                    onClick={() => arrepentirse(dog,target)}
+                    >
 
-                }>
-                    
-                    Arrepentirse
-                </IconButton>
+                        Arrepentirse
+                    </IconButton>
 
-            }
+                }
 
-        </Card>
+            </Card>
+        </>
+
     );
 }

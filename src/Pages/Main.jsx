@@ -8,9 +8,10 @@ import {
     List,
     ListItem,
     ListItemText,
-    Box
+    ListSubheader,
+    Box,
+    Grid
 } from "@mui/material";
-import Grid from '@mui/material/Unstable_Grid2';
 export default function App() {
     const [likedDogs, setLikedDogs] = useState([]);
     const [dislikedDogs, setDislikedDogs] = useState([]);
@@ -31,6 +32,20 @@ export default function App() {
         setIsFetching(false);
     };
 
+    const onArrepentirse = (dog, targetList) => {
+        if (isFetching) { return };
+        setIsFetching(true);
+
+        if (targetList === 'disliked') {
+            setLikedDogs((prevDogs) => prevDogs.filter((d) => d.name !== dog.name));
+            setDislikedDogs((prevDogs) => [dog, ...prevDogs])
+        } else {
+            setDislikedDogs((prevDogs) => prevDogs.filter((d) => d.name !== dog.name));
+            setLikedDogs((prevDogs) => [dog, ...prevDogs]);
+        }
+
+        setIsFetching(false);
+    };
     return (
         <Grid
             container
@@ -49,7 +64,26 @@ export default function App() {
                             opacity: [0.9, 0.8, 0.7],
                         },
                     }}
-                />
+                >
+                    <List
+                        sx={{
+                            width: '100%',
+                            height :'100%',
+                            bgcolor: 'background.paper',
+                            position: 'relative',
+                            overflow: 'auto',
+                            '& ul': { padding: 0 },
+
+                        }}
+                        subheader={<li />}
+                    >
+                       
+                        {likedDogs.map((dog, index) => (
+                            <DogCard key={index} dogData={dog} arrepentirse={onArrepentirse} target={'disliked'}  />
+                        ))}
+
+                    </List>
+                </Box>
             </Grid>
             <Grid item xs={12} sm={4}>
                 <DogCard currentDog={currentDog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
@@ -66,7 +100,26 @@ export default function App() {
                             opacity: [0.9, 0.8, 0.7],
                         },
                     }}
-                />
+                >
+                    <List
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            bgcolor: 'background.paper',
+                            position: 'relative',
+                            overflow: 'auto',
+                            '& ul': { padding: 0 },
+
+                        }}
+                        subheader={<li />}
+                    >
+
+                        {dislikedDogs.map((dog, index) => (
+                            <DogCard key={index} dogData={dog} arrepentirse={onArrepentirse} target={'liked'} />
+                        ))}
+
+                    </List>
+                </Box>
             </Grid>
         </Grid>
     )

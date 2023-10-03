@@ -1,5 +1,5 @@
 // DogList.js
-import { Card, Typography, Button } from '@mui/material';
+// import { Card, Typography, Button } from '@mui/material';
 import DogCard from './Mi';
 // import DogCard from './DogCard';
 

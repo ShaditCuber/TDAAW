@@ -1,4 +1,4 @@
-import { Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
+import { Card, CardMedia, CardContent, Button } from '@mui/material';
 
 function DogCard({ dog, onUndo }) {
     return (
