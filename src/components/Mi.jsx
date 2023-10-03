@@ -42,6 +42,7 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
         setIsLoadingImage(true);
 
         const { data } = await axios.get('https://dog.ceo/api/breeds/image/random');
+        console.log(data)
         // const { data } = await axios.get('https://api.thecatapi.com/v1/images/search');
         setTimeout(() => {
             setIsLoadingImage(false);
@@ -62,12 +63,14 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
         name: generateRandomName(),
         image: data.message,
         // image: data[0].url,
-        description: 'Lorem ipsum...'
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
     };
 
     if (dogData) {
         dog = dogData;
     }
+
+    
 
 
 

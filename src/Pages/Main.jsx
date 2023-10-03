@@ -72,10 +72,7 @@ export default function App() {
                             bgcolor: 'background.paper',
                             position: 'relative',
                             overflow: 'auto',
-                            '& ul': { padding: 0 },
-
                         }}
-                        subheader={<li />}
                     >
                        
                         {likedDogs.map((dog, index) => (
