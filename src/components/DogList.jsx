@@ -7,13 +7,11 @@ import DogCard from './Mi';
 function DogList({ dogs, title, onUndo }) {
     return (
         <>
-            <div style={{ overflowY: 'scroll', height: '500px'}}>
                 {dogs.map((dog, index) => (
                     // <DogCard key={index} dog={dog} onUndo={() => onUndo(dog)} />
                     <DogCard key={index} dogData={dog} />
 
                 ))}
-            </div>
         </>
     );
 }

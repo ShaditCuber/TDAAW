@@ -23,11 +23,7 @@ import { useSwipeable } from 'react-swipeable';
 import zIndex from '@mui/material/styles/zIndex';
 
 
-const fetchDog = async () => {
-    // const { data } = await axios.get('https://dog.ceo/api/breeds/image/random');
-    const { data } = await axios.get('https://api.thecatapi.com/v1/images/search');
-    return data;
-};
+
 
 const generateRandomName = () => {
     return Math.random().toString(36).substring(2, 8);
@@ -35,10 +31,21 @@ const generateRandomName = () => {
 
 export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, isMain, dogData }) {
     const [expanded, setExpanded] = useState(false);
+    const [isLoadingImage, setIsLoadingImage] = useState(false);
 
   
     const handleExpandClick = () => {
         setExpanded(!expanded);
+    };
+
+    const fetchDog = async () => {
+        // const { data } = await axios.get('https://dog.ceo/api/breeds/image/random');
+        setIsLoadingImage(true);
+        const { data } = await axios.get('https://api.thecatapi.com/v1/images/search');
+        setTimeout(() => {
+            setIsLoadingImage(false);
+        }, 1000);
+        return data;
     };
 
     const { data, isLoading, refetch } = useQuery(['currentDog'], fetchDog, { refetchOnWindowFocus: false });
@@ -64,7 +71,7 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
 
 
 
-    const styles = isMain ? { width: 345, height: 500, position: 'relative', borderRadius: '70px' } : { width: 200, height: 200, position: 'relative', borderRadius: '70px' }
+    const styles = isMain ? { width: 345, height: 500, position: 'relative', borderRadius: '70px' } : { width: 345, height: 250, position: 'relative'}
 
     const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
@@ -117,7 +124,7 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
                 <IconButton
                     aria-label="like"
                     onClick={() => onLike(dog)}
-                    disabled={isFetching}  
+                    disabled={isLoadingImage}  
                     sx={{
                         backgroundColor: 'gray',
 
@@ -135,7 +142,7 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
                 <IconButton
                     aria-label="dislike"
                     onClick={() => onDislike(dog)}
-                    disabled={isFetching}  
+                    disabled={isLoadingImage}  
                     sx={{
                         color: 'red',
                         backgroundColor: 'gray',
