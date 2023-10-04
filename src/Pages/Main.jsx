@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import DogList from '../components/DogList';
 import DogCard from '../components/Mi';
+import TinderCard from 'react-tinder-card'
+
 import {
     Button,
     Divider,
@@ -32,6 +34,14 @@ export default function App() {
         setIsFetching(false);
     };
 
+    const onSwipe = (direction) => {
+        console.log('You swiped: ' + direction)
+    }
+
+    const onCardLeftScreen = (myIdentifier) => {
+        console.log(myIdentifier + ' left the screen')
+    }
+
     const onArrepentirse = (dog, targetList) => {
         if (isFetching) { return };
         setIsFetching(true);
@@ -46,6 +56,14 @@ export default function App() {
 
         setIsFetching(false);
     };
+    /*
+    return (
+        <TinderCard onSwipe={onSwipe} >
+
+            hola
+        </TinderCard>
+    );*/
+
     return (
         <Grid
             container
@@ -84,7 +102,6 @@ export default function App() {
             </Grid>
             <Grid item xs={12} sm={4}>
                 <DogCard currentDog={currentDog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
-
             </Grid>
             <Grid item xs={12} sm={4}>
                 <Box

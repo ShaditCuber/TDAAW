@@ -21,19 +21,20 @@ import { Button, CircularProgress, LinearProgress } from '@mui/material';
 import axios from 'axios';
 import { useSwipeable } from 'react-swipeable';
 import zIndex from '@mui/material/styles/zIndex';
+import { useLoadDog } from '../services/api';
+import { generateRandomName } from '../util';
+import { a } from '@react-spring/web';
 
 
 
 
-const generateRandomName = () => {
-    return Math.random().toString(36).substring(2, 8);
-};
 
-export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, isMain, dogData , arrepentirse , target}) {
+
+export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, isMain, dogData, arrepentirse, target }) {
     const [expanded, setExpanded] = useState(false);
     const [isLoadingImage, setIsLoadingImage] = useState(false);
 
-
+    /*
     const fetchDog = async () => {
         setIsLoadingImage(true);
 
@@ -48,10 +49,10 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
 
     const { data, isLoading, refetch , isError } = useQuery(['currentDog'], fetchDog, { refetchOnWindowFocus: false });
 
+    
     useEffect(() => {
         refetch();
     }, [onLike, onDislike]);
-
 
     if (isLoading) return <LinearProgress />;
 
@@ -62,11 +63,24 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
     };
 
+    
+    */
+    useEffect(() => {
+        refetch();
+    }, [onLike, onDislike]);
+
+    const [isCat, setIsCat] = useState(false);
+    let { data: dog, isLoading, refetch } = useLoadDog(isCat)
+
+    if (isLoading) return <LinearProgress />;
     if (dogData) {
         dog = dogData;
     }
 
-    
+    const onChange = () => {
+        setIsCat(!isCat);
+    };
+
 
 
 
@@ -76,8 +90,24 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
     const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
         <>
-            {isLoadingImage && <CircularProgress />} 
+            {isLoading && <CircularProgress />}
+            <IconButton
+                aria-label="like"
+                onClick={() => onChange()}
+                sx={{
+                    backgroundColor: 'gray',
 
+                    color: 'pink',
+                    '&:hover': {
+                        color: 'green',
+                        fontSize: '100px',
+                        backgroundColor: 'white ',
+
+                    }
+                }}
+            >
+                <ExpandMoreIcon style={{ fontSize: 60 }} />
+            </IconButton>
             <Card sx={styles}>
 
                 <CardMedia
@@ -172,9 +202,9 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
                             color: 'red',
                             background: 'gray',
                         }
-                        
+
                     }
-                    onClick={() => arrepentirse(dog,target)}
+                        onClick={() => arrepentirse(dog, target)}
                     >
 
                         Arrepentirse
