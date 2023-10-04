@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-import DogList from '../components/DogList';
+// import DogList from '../components/DogList';
 import DogCard from '../components/Mi';
 import TinderCard from 'react-tinder-card'
 import IconButton from '@mui/material/IconButton';
