@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import DogList from '../components/DogList';
 import DogCard from '../components/Mi';
 import TinderCard from 'react-tinder-card'
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import {
     Button,
     Divider,
-    LinearProgress,
+    CircularProgress,
     List,
     ListItem,
     ListItemText,
@@ -14,33 +16,52 @@ import {
     Box,
     Grid
 } from "@mui/material";
+import { useLoadDog } from '../services/api';
 export default function App() {
     const [likedDogs, setLikedDogs] = useState([]);
     const [dislikedDogs, setDislikedDogs] = useState([]);
     const [currentDog, setCurrentDog] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
+    const [shouldRefetch, setShouldRefetch] = useState(false);
+    const [isCat, setIsCat] = useState(false);
+
+    
 
     const onLike = (dog) => {
         if (isFetching) { return };
         setIsFetching(true);
         setLikedDogs((prevDogs) => [dog, ...prevDogs]);
-        setIsFetching(false);
+        setTimeout(() => {
+            setIsFetching(false);
+        }, 1000);
+        setShouldRefetch(true);
     };
 
     const onDislike = (dog) => {
         if (isFetching) { return };
         setIsFetching(true);
         setDislikedDogs((prevDogs) => [dog, ...prevDogs]);
-        setIsFetching(false);
+        setTimeout(() => {
+            setIsFetching(false);
+        }, 1000);
+        setShouldRefetch(true);
     };
 
-    const onSwipe = (direction) => {
-        console.log('You swiped: ' + direction)
-    }
+    useEffect(() => {
+        if (shouldRefetch) {
+            refetch();
+            setShouldRefetch(false);
+        }
+    }, [shouldRefetch]);
 
-    const onCardLeftScreen = (myIdentifier) => {
-        console.log(myIdentifier + ' left the screen')
-    }
+    let { data: dog, isLoading, refetch } = useLoadDog(isCat)
+    if (isLoading) {return <CircularProgress size="150px"/>}
+    
+    const onChange = () => {
+        setIsCat(!isCat);
+    };
+
+
 
     const onArrepentirse = (dog, targetList) => {
         if (isFetching) { return };
@@ -56,130 +77,111 @@ export default function App() {
 
         setIsFetching(false);
     };
-    /*
-    return (
-        <TinderCard onSwipe={onSwipe} >
 
-            hola
-        </TinderCard>
-    );*/
+    const swiped = (direction, nameToDelete, index) => {
+        console.log(direction)
+    }
+
 
     return (
-        <Grid
-            container
-            spacing={4}
-            direction="row"
-            justifyContent="center"
-            alignItems="center">
-            <Grid item xs={12} sm={4}>
-                <Box
-                    sx={{
-                        width: 345,
-                        height: 500 ,
-                        backgroundColor: 'primary.dark',
-                        '&:hover': {
-                            backgroundColor: 'primary.main',
-                            opacity: [0.9, 0.8, 0.7],
-                        },
-                    }}
-                >
-                    <List
+
+        <>
+            <IconButton
+                aria-label="like"
+                onClick={() => onChange()}
+                sx={{
+                    backgroundColor: 'gray',
+
+                    color: 'pink',
+                    '&:hover': {
+                        color: 'green',
+                        fontSize: '100px',
+                        backgroundColor: 'white ',
+
+                    }
+                }}
+            >
+                <ExpandMoreIcon style={{ fontSize: 60 }} />
+            </IconButton>
+            <Grid
+                container
+                spacing={4}
+                direction="row"
+                justifyContent="center"
+                alignItems="center">
+
+                <Grid item xs={12} sm={4}>
+                    <Box
                         sx={{
-                            width: '100%',
-                            height :'100%',
-                            bgcolor: 'background.paper',
-                            position: 'relative',
-                            overflow: 'auto',
+                            width: 345,
+                            height: 500,
+                            backgroundColor: 'primary.dark',
+                            '&:hover': {
+                                backgroundColor: 'primary.main',
+                                opacity: [0.9, 0.8, 0.7],
+                            },
                         }}
                     >
-                       
-                        {likedDogs.map((dog, index) => (
-                            <DogCard key={index} dogData={dog} arrepentirse={onArrepentirse} target={'disliked'}  />
-                        ))}
+                        <List
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                bgcolor: 'background.paper',
+                                position: 'relative',
+                                overflow: 'auto',
+                            }}
+                        >
 
-                    </List>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <DogCard currentDog={currentDog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <Box
-                    sx={{
-                        width: 345,
-                        height: 500,
-                        backgroundColor: 'primary.dark',
-                        '&:hover': {
-                            backgroundColor: 'primary.main',
-                            opacity: [0.9, 0.8, 0.7],
-                        },
-                    }}
-                >
-                    <List
+                            {likedDogs.map((dog, index) => (
+                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} />
+                            ))}
+
+                        </List>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <div style={{ width: 345, height: 500, display: 'flex', textAlign :  'center' , justifyContent : 'center'}}>
+                        {isFetching ? <CircularProgress size="150px"/> :
+                            <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
+                        }
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Box
                         sx={{
-                            width: '100%',
-                            height: '100%',
-                            bgcolor: 'background.paper',
-                            position: 'relative',
-                            overflow: 'auto',
-                            '& ul': { padding: 0 },
-
+                            width: 345,
+                            height: 500,
+                            backgroundColor: 'primary.dark',
+                            '&:hover': {
+                                backgroundColor: 'primary.main',
+                                opacity: [0.9, 0.8, 0.7],
+                            },
                         }}
-                        subheader={<li />}
                     >
+                        <List
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                bgcolor: 'background.paper',
+                                position: 'relative',
+                                overflow: 'auto',
+                                '& ul': { padding: 0 },
 
-                        {dislikedDogs.map((dog, index) => (
-                            <DogCard key={index} dogData={dog} arrepentirse={onArrepentirse} target={'liked'} />
-                        ))}
+                            }}
+                            subheader={<li />}
+                        >
+                            {dislikedDogs.map((dog, index) => (
+                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'liked'} />
+                            ))}
 
-                    </List>
-                </Box>
+                        </List>
+                    </Box>
+                </Grid>
             </Grid>
-        </Grid>
+
+        </>
+
     )
-
-    // return (
-    //     <>
-    //         <Grid
-    //             container
-    //             spacing={4}
-    //             direction="row"
-    //             justifyContent="center"
-    //             alignItems="center">
-    //             <Grid item xs={12} sm={4}>
-    //                 <List sx={{
-    //                     width: '100%',
-    //                     maxWidth: 345,
-    //                     bgcolor: 'background.paper',
-    //                     position: 'relative',
-    //                     overflow: 'auto',
-    //                     maxHeight: 500,
-    //                     '& ul': { padding: 0 },
-    //                 }}>
-    //                     <DogList dogs={likedDogs} title="Liked Dogs" />
-    //                 </List>
-    //                 {/* <DogList dogs={likedDogs} title="Liked Dogs" /> */}
-    //             </Grid>
-    //             <Grid item xs={12} sm={4}>
-    //                 <DogCard currentDog={currentDog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
-    //             </Grid>
-    //             <Grid item xs={12} sm={4}>
-    //                 <List sx={{
-    //                     width: '100%',
-    //                     maxWidth: 345,
-    //                     bgcolor: 'background.paper',
-    //                     position: 'relative',
-    //                     overflow: 'auto',
-    //                     maxHeight: 500,
-    //                     '& ul': { padding: 0 },
-    //                 }}>
-    //                     <DogList dogs={dislikedDogs} title="Disliked Dogs" />
-    //                 </List>
-    //                 {/* <DogList dogs={dislikedDogs} title="Disliked Dogs" /> */}
-    //             </Grid>
-    //         </Grid>
-    //     </>
-    // );
 
 
 

@@ -30,84 +30,13 @@ import { a } from '@react-spring/web';
 
 
 
-export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, isMain, dogData, arrepentirse, target }) {
-    const [expanded, setExpanded] = useState(false);
-    const [isLoadingImage, setIsLoadingImage] = useState(false);
-
-    /*
-    const fetchDog = async () => {
-        setIsLoadingImage(true);
-
-        const { data } = await axios.get('https://dog.ceo/api/breeds/image/random');
-        console.log(data)
-        // const { data } = await axios.get('https://api.thecatapi.com/v1/images/search');
-        setTimeout(() => {
-            setIsLoadingImage(false);
-        }, 1000);
-        return data;
-    };
-
-    const { data, isLoading, refetch , isError } = useQuery(['currentDog'], fetchDog, { refetchOnWindowFocus: false });
-
-    
-    useEffect(() => {
-        refetch();
-    }, [onLike, onDislike]);
-
-    if (isLoading) return <LinearProgress />;
-
-    let dog = {
-        name: generateRandomName(),
-        image: data.message,
-        // image: data[0].url,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-    };
-
-    
-    */
-    useEffect(() => {
-        refetch();
-    }, [onLike, onDislike]);
-
-    const [isCat, setIsCat] = useState(false);
-    let { data: dog, isLoading, refetch } = useLoadDog(isCat)
-
-    if (isLoading) return <LinearProgress />;
-    if (dogData) {
-        dog = dogData;
-    }
-
-    const onChange = () => {
-        setIsCat(!isCat);
-    };
-
-
-
-
+export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse, target }) {
 
     const styles = isMain ? { width: 345, height: 500, position: 'relative', borderRadius: '70px', maxWidth: 346 } : { maxWidth: 345, height: 300, position: 'relative', marginBottom: '20px' }
 
     const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
         <>
-            {isLoading && <CircularProgress />}
-            <IconButton
-                aria-label="like"
-                onClick={() => onChange()}
-                sx={{
-                    backgroundColor: 'gray',
-
-                    color: 'pink',
-                    '&:hover': {
-                        color: 'green',
-                        fontSize: '100px',
-                        backgroundColor: 'white ',
-
-                    }
-                }}
-            >
-                <ExpandMoreIcon style={{ fontSize: 60 }} />
-            </IconButton>
             <Card sx={styles}>
 
                 <CardMedia
@@ -157,7 +86,6 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
                     <IconButton
                         aria-label="like"
                         onClick={() => onLike(dog)}
-                        disabled={isLoadingImage}
                         sx={{
                             backgroundColor: 'gray',
 
@@ -175,7 +103,6 @@ export default function DogCard({ onLike, onDislike, isFetching, setIsFetching, 
                     <IconButton
                         aria-label="dislike"
                         onClick={() => onDislike(dog)}
-                        disabled={isLoadingImage}
                         sx={{
                             color: 'red',
                             backgroundColor: 'gray',
