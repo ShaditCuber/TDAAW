@@ -113,8 +113,8 @@ export default function App() {
                 <Grid item xs={12} sm={4}>
                     <Box
                         sx={{
-                            width: 345,
-                            height: 500,
+                            width:  '40vh',
+                            height: '50vh',
                             backgroundColor: 'primary.dark',
                             '&:hover': {
                                 backgroundColor: 'primary.main',
@@ -126,12 +126,13 @@ export default function App() {
                             sx={{
                                 width: '100%',
                                 height: '100%',
-                                bgcolor: 'background.paper',
+                                bgcolor: '#242424',
                                 position: 'relative',
                                 overflow: 'auto',
                             }}
+                            subheader={<li />}
                         >
-
+                            
                             {likedDogs.map((dog, index) => (
                                 <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} />
                             ))}
@@ -140,7 +141,7 @@ export default function App() {
                     </Box>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <div style={{ width: 345, height: 500, display: 'flex', textAlign :  'center' , justifyContent : 'center'}}>
+                    <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign :  'center' , justifyContent : 'center'}}>
                         {isFetching ? <CircularProgress size="150px"/> :
                             <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
                         }
@@ -149,8 +150,8 @@ export default function App() {
                 <Grid item xs={12} sm={4}>
                     <Box
                         sx={{
-                            width: 345,
-                            height: 500,
+                            width: '40vh',
+                            height: '50vh',
                             backgroundColor: 'primary.dark',
                             '&:hover': {
                                 backgroundColor: 'primary.main',
@@ -162,7 +163,7 @@ export default function App() {
                             sx={{
                                 width: '100%',
                                 height: '100%',
-                                bgcolor: 'background.paper',
+                                bgcolor: '#242424',
                                 position: 'relative',
                                 overflow: 'auto',
                                 '& ul': { padding: 0 },

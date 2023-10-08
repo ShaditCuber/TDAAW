@@ -14,7 +14,10 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import CloseIcon from '@mui/icons-material/Close';
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
+import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Button, CircularProgress, LinearProgress } from '@mui/material';
@@ -32,8 +35,12 @@ import { a } from '@react-spring/web';
 
 export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse, target }) {
 
-    const styles = isMain ? { width: 345, height: 500, position: 'relative', borderRadius: '70px', maxWidth: 346 } : { maxWidth: 345, height: 300, position: 'relative', marginBottom: '20px' }
+    //const styles = isMain ? { width: 400, height: 500, position: 'relative', borderRadius: '10px', maxWidth: 400 } : { maxWidth: 345, height: 400, position: 'relative', marginBottom: '20px' }
+    const styles = isMain
+    ? { width: "100%", height: '100%', position: 'relative', borderRadius: '10px', maxWidth: '100%' }
+    : { width: "100%", height: '100%', position: 'relative', marginBottom: '5px' }; // Cambia maxWidth según tus necesidades
 
+    const [showDescription, setShowDescription] = useState(false);
     const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
         <>
@@ -49,27 +56,44 @@ export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse,
                         height: '100%',
                         objectFit: 'cover',
                         zIndex: 1,
+                        display: 'inline-block',
                     }}
                     image={dog.image}
                     alt="Error al cargar la imagen"
                 />
 
-                <CardContent
-                    sx={{
-                        position: 'absolute',
-                        top: 0,
-                        width: '100%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        zIndex: 2
-                    }}
-                >
-                    <Typography variant={fontSizeResponsive} color="white" sx={{ fontWeight: 'bold' }}>
+            <CardContent
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    width: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    zIndex: 2,
+                }}
+            >
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant="h3" color="white" sx={{ fontWeight: 'bold' }}>
                         {dog.name}
                     </Typography>
+                    <IconButton
+                        onClick={() => setShowDescription(!showDescription)}
+                        sx={{
+                            color: 'white',
+                        }}
+                    >
+                        {showDescription ? (
+                            <ArrowDropUpOutlinedIcon style={{ fontSize: 60 }} />
+                        ) : (
+                            <ArrowDropDownOutlinedIcon style={{ fontSize: 60 }} />
+                        )}
+                    </IconButton>
+                </div>
+                {showDescription && (
                     <Typography variant="body2" color="white" sx={{ fontWeight: 'medium' }}>
                         {dog.description}
                     </Typography>
-                </CardContent>
+                )}
+            </CardContent>
 
                 {isMain ? <CardActions
                     disableSpacing
@@ -87,13 +111,12 @@ export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse,
                         aria-label="like"
                         onClick={() => onLike(dog)}
                         sx={{
-                            backgroundColor: 'gray',
+                            
 
-                            color: 'pink',
+                            color: '#c06d84',
                             '&:hover': {
-                                color: 'green',
+                                color: '#E04D4D',
                                 fontSize: '100px',
-                                backgroundColor: 'white ',
 
                             }
                         }}
@@ -104,41 +127,40 @@ export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse,
                         aria-label="dislike"
                         onClick={() => onDislike(dog)}
                         sx={{
-                            color: 'red',
-                            backgroundColor: 'gray',
+                            color: '#afded7',
                             '&:hover': {
-                                color: 'red',
+                                color: '#E04D4D',
                                 fontSize: '100px',
-                                backgroundColor: 'white',
-
                             },
                             marginRight: '30px'
 
                         }}
                     >
-                        <CloseIcon style={{ fontSize: 60 }} />
+                        <HeartBrokenIcon style={{ fontSize: 60 }} />
                     </IconButton>
                 </CardActions>
                     :
                     <IconButton sx={
                         {
-                            zIndex: 2,
+                            zIndex: 1,
                             position: 'absolute',
                             bottom: 0,
-                            width: '100%',
-                            color: 'red',
-                            background: 'gray',
+                            width: '30%',
+                            color: '#1B7CD2',
+                            '&:hover': {
+                                color: '#E04D4D',
+                                fontSize: '100px',
+
+                            },
                         }
 
                     }
                         onClick={() => arrepentirse(dog, target)}
                     >
-
-                        Arrepentirse
+                        <SwapHorizIcon style={{ fontSize: 60 }} />
                     </IconButton>
 
                 }
-
             </Card>
         </>
 
