@@ -1,9 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { generateRandomName } from "../util";
+import { LoremIpsum } from "lorem-ipsum";
 
 
-
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 4
+  }
+});
 
 
 export function useLoadDog(isCat=false) {
@@ -27,9 +37,11 @@ export const loadDog = async (isCat = false) => {
 
     console.log(URL[paramsFilter])
     const { data } = await axios.get(URL[paramsFilter]);
+    const random = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
     const dog = {
         name: generateRandomName(),
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        description: lorem.generateWords(random),
+        show_description : false,
     };
     dog.image = data.message || data[0].url;
     

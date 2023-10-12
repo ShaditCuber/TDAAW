@@ -38,9 +38,9 @@ export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse,
     //const styles = isMain ? { width: 400, height: 500, position: 'relative', borderRadius: '10px', maxWidth: 400 } : { maxWidth: 345, height: 400, position: 'relative', marginBottom: '20px' }
     const styles = isMain
     ? { width: "100%", height: '100%', position: 'relative', borderRadius: '10px', maxWidth: '100%' }
-    : { width: "100%", height: '100%', position: 'relative', marginBottom: '5px' }; // Cambia maxWidth según tus necesidades
+    : { width: "100%", height: '90%', position: 'relative', marginBottom: '5px'}; // Cambia maxWidth según tus necesidades
 
-    const [showDescription, setShowDescription] = useState(false);
+    const [showDescription, setShowDescription] = useState(false);  
     const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
         <>
@@ -81,14 +81,14 @@ export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse,
                             color: 'white',
                         }}
                     >
-                        {showDescription ? (
+                            {(showDescription || isMain)? (
                             <ArrowDropUpOutlinedIcon style={{ fontSize: 60 }} />
                         ) : (
                             <ArrowDropDownOutlinedIcon style={{ fontSize: 60 }} />
                         )}
                     </IconButton>
                 </div>
-                {showDescription && (
+                    {(showDescription || isMain)&& (
                     <Typography variant="body2" color="white" sx={{ fontWeight: 'medium' }}>
                         {dog.description}
                     </Typography>

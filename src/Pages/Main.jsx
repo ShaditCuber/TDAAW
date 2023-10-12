@@ -25,7 +25,7 @@ export default function App() {
     const [shouldRefetch, setShouldRefetch] = useState(false);
     const [isCat, setIsCat] = useState(false);
 
-    
+
 
     const onLike = (dog) => {
         if (isFetching) { return };
@@ -55,8 +55,8 @@ export default function App() {
     }, [shouldRefetch]);
 
     let { data: dog, isLoading, refetch } = useLoadDog(isCat)
-    if (isLoading) {return <CircularProgress size="150px"/>}
-    
+    if (isLoading) { return <CircularProgress size="150px" /> }
+
     const onChange = () => {
         setIsCat(!isCat);
     };
@@ -87,21 +87,20 @@ export default function App() {
 
         <>
             <IconButton
-                aria-label="like"
+                aria-label="change_to_cat"
                 onClick={() => onChange()}
                 sx={{
                     backgroundColor: 'gray',
 
                     color: 'pink',
                     '&:hover': {
-                        color: 'green',
-                        fontSize: '100px',
-                        backgroundColor: 'white ',
+                        backgroundColor: 'green ',
 
                     }
                 }}
             >
                 <ExpandMoreIcon style={{ fontSize: 60 }} />
+                Cambiar a Gatitos
             </IconButton>
             <Grid
                 container
@@ -111,9 +110,17 @@ export default function App() {
                 alignItems="center">
 
                 <Grid item xs={12} sm={4}>
+                    <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
+                        {isFetching ? <CircularProgress size="150px" /> :
+                            <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
+                        }
+                    </div>
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
                     <Box
                         sx={{
-                            width:  '40vh',
+                            width: '40vh',
                             height: '50vh',
                             backgroundColor: 'primary.dark',
                             '&:hover': {
@@ -132,7 +139,7 @@ export default function App() {
                             }}
                             subheader={<li />}
                         >
-                            
+
                             {likedDogs.map((dog, index) => (
                                 <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} />
                             ))}
@@ -140,13 +147,7 @@ export default function App() {
                         </List>
                     </Box>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                    <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign :  'center' , justifyContent : 'center'}}>
-                        {isFetching ? <CircularProgress size="150px"/> :
-                            <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
-                        }
-                    </div>
-                </Grid>
+
                 <Grid item xs={12} sm={4}>
                     <Box
                         sx={{
