@@ -33,14 +33,20 @@ import { a } from '@react-spring/web';
 
 
 
-export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse, target }) {
+export default function DogCard({ onLike, onDislike, isMain, dog, arrepentirse, target, openedDescriptionDog, setOpenedDescriptionDog }) {
 
     //const styles = isMain ? { width: 400, height: 500, position: 'relative', borderRadius: '10px', maxWidth: 400 } : { maxWidth: 345, height: 400, position: 'relative', marginBottom: '20px' }
     const styles = isMain
-    ? { width: "100%", height: '100%', position: 'relative', borderRadius: '10px', maxWidth: '100%' }
-    : { width: "100%", height: '90%', position: 'relative', marginBottom: '5px'}; // Cambia maxWidth según tus necesidades
+        ? { width: "100%", height: '100%', position: 'relative', borderRadius: '10px', maxWidth: '100%' }
+        : { width: "100%", height: '90%', position: 'relative', marginBottom: '5px' }; // Cambia maxWidth según tus necesidades
 
-    const [showDescription, setShowDescription] = useState(false);  
+    const [showDescription, setShowDescription] = useState(dog.id === openedDescriptionDog);
+
+    useEffect(() => {
+        setShowDescription(dog.id === openedDescriptionDog);
+    }, [openedDescriptionDog, dog.id]);
+
+
     const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
         <>
@@ -62,38 +68,57 @@ export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse,
                     alt="Error al cargar la imagen"
                 />
 
-            <CardContent
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    width: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    zIndex: 2,
-                }}
-            >
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography variant="h3" color="white" sx={{ fontWeight: 'bold' }}>
-                        {dog.name}
-                    </Typography>
-                    <IconButton
-                        onClick={() => setShowDescription(!showDescription)}
-                        sx={{
-                            color: 'white',
-                        }}
-                    >
-                            {(showDescription || isMain)? (
-                            <ArrowDropUpOutlinedIcon style={{ fontSize: 60 }} />
-                        ) : (
-                            <ArrowDropDownOutlinedIcon style={{ fontSize: 60 }} />
-                        )}
-                    </IconButton>
-                </div>
-                    {(showDescription || isMain)&& (
-                    <Typography variant="body2" color="white" sx={{ fontWeight: 'medium' }}>
-                        {dog.description}
-                    </Typography>
-                )}
-            </CardContent>
+                <CardContent
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        width: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        zIndex: 2,
+                    }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Typography variant="h3" color="white" sx={{ fontWeight: 'bold' }}>
+                            {dog.name}
+                        </Typography>
+                        {!isMain &&
+                            <IconButton
+                                onClick={() => {
+                                    if (showDescription) {
+                                        setOpenedDescriptionDog(null);
+                                    } else {
+                                        setOpenedDescriptionDog(dog.id);
+                                    }
+                                    setShowDescription(!showDescription);
+                                }}
+                                sx={{
+                                    color: 'white',
+                                }}
+                            >
+                                {(showDescription || isMain) ? (
+                                    <ArrowDropUpOutlinedIcon style={{ fontSize: 60 }} />
+                                ) : (
+                                    <ArrowDropDownOutlinedIcon style={{ fontSize: 60 }} />
+                                )}
+                            </IconButton>}
+                    </div>
+                    {(showDescription || isMain) && (
+                        <Typography
+                            variant="body2"
+                            color="white"
+                            sx={{
+                                fontWeight: 'medium',
+                                textAlign: 'justify', // Texto justificado
+                                maxWidth: '90%', // Limitar ancho
+                                overflow: 'hidden', // Esconder desbordamiento
+                                textOverflow: 'ellipsis', // Agregar elipsis si hay desbordamiento
+                            }}
+                        >
+                            {dog.description}
+                        </Typography>
+
+                    )}
+                </CardContent>
 
                 {isMain ? <CardActions
                     disableSpacing
@@ -111,7 +136,7 @@ export default function DogCard({ onLike, onDislike , isMain, dog, arrepentirse,
                         aria-label="like"
                         onClick={() => onLike(dog)}
                         sx={{
-                            
+
 
                             color: '#c06d84',
                             '&:hover': {

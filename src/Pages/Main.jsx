@@ -4,6 +4,7 @@ import DogCard from '../components/Mi';
 import TinderCard from 'react-tinder-card'
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Typography from '@mui/material/Typography';
 
 import {
     Button,
@@ -24,6 +25,7 @@ export default function App() {
     const [isFetching, setIsFetching] = useState(false);
     const [shouldRefetch, setShouldRefetch] = useState(false);
     const [isCat, setIsCat] = useState(false);
+    const [openedDescriptionDog, setOpenedDescriptionDog] = useState(null);
 
 
 
@@ -78,30 +80,31 @@ export default function App() {
         setIsFetching(false);
     };
 
-    const swiped = (direction, nameToDelete, index) => {
-        console.log(direction)
-    }
 
 
     return (
 
         <>
-            <IconButton
-                aria-label="change_to_cat"
+            <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<ExpandMoreIcon />}
                 onClick={() => onChange()}
                 sx={{
-                    backgroundColor: 'gray',
-
-                    color: 'pink',
+                    margin: '20px',
+                    borderColor: 'pink',
                     '&:hover': {
-                        backgroundColor: 'green ',
-
+                        borderColor: 'green',
+                        backgroundColor: 'green',
+                        color: 'white',
+                    },
+                    transition: 'transform 0.3s',
+                    '&:hover': {
+                        transform: 'scale(1.1)',
                     }
                 }}
             >
-                <ExpandMoreIcon style={{ fontSize: 60 }} />
-                Cambiar a Gatitos
-            </IconButton>
+                {isCat ? "Cambiar a Perrito" : "Cambiar a Gatito"}            </Button>
             <Grid
                 container
                 spacing={4}
@@ -110,6 +113,7 @@ export default function App() {
                 alignItems="center">
 
                 <Grid item xs={12} sm={4}>
+                    <Typography variant="h5" align="center" gutterBottom>Candidato</Typography>
                     <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
                         {isFetching ? <CircularProgress size="150px" /> :
                             <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
@@ -118,6 +122,7 @@ export default function App() {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
+                    <Typography variant="h5" align="center" gutterBottom>Me gusta</Typography>
                     <Box
                         sx={{
                             width: '40vh',
@@ -141,7 +146,7 @@ export default function App() {
                         >
 
                             {likedDogs.map((dog, index) => (
-                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} />
+                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
                             ))}
 
                         </List>
@@ -149,6 +154,7 @@ export default function App() {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
+                    <Typography variant="h5" align="center" gutterBottom>No me gusta</Typography>
                     <Box
                         sx={{
                             width: '40vh',
@@ -173,7 +179,7 @@ export default function App() {
                             subheader={<li />}
                         >
                             {dislikedDogs.map((dog, index) => (
-                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'liked'} />
+                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'liked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
                             ))}
 
                         </List>

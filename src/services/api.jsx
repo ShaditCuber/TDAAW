@@ -38,13 +38,16 @@ export const loadDog = async (isCat = false) => {
     console.log(URL[paramsFilter])
     const { data } = await axios.get(URL[paramsFilter]);
     const random = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+    const dog_name = generateRandomName()
     const dog = {
-        name: generateRandomName(),
+        // colocarle a cada mascota unn uuid
+        id: dog_name +'-' +random,
+        name: dog_name,
         description: lorem.generateWords(random),
         show_description : false,
     };
     dog.image = data.message || data[0].url;
-    
+    console.log(dog)
     try {
         const response = await axios.get(dog.image);
 
