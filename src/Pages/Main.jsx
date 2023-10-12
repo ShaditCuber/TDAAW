@@ -1,19 +1,12 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
-// import DogList from '../components/DogList';
+import React, { useState, useEffect } from 'react';
 import DogCard from '../components/Mi';
-import TinderCard from 'react-tinder-card'
-import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 
 import {
     Button,
-    Divider,
     CircularProgress,
     List,
-    ListItem,
-    ListItemText,
-    ListSubheader,
     Box,
     Grid
 } from "@mui/material";
@@ -85,108 +78,127 @@ export default function App() {
     return (
 
         <>
-            <Button
-                variant="outlined"
-                color="secondary"
-                startIcon={<ExpandMoreIcon />}
-                onClick={() => onChange()}
+            <Box
                 sx={{
-                    margin: '20px',
-                    borderColor: 'pink',
-                    '&:hover': {
-                        borderColor: 'green',
-                        backgroundColor: 'green',
-                        color: 'white',
-                    },
-                    transition: 'transform 0.3s',
-                    '&:hover': {
-                        transform: 'scale(1.1)',
-                    }
+                    backgroundColor: '#F7E0D3',
+                    minHeight: '90vh', 
+                    padding: '1em', 
                 }}
             >
-                {isCat ? "Cambiar a Perrito" : "Cambiar a Gatito"}            </Button>
-            <Grid
-                container
-                spacing={4}
-                direction="row"
-                justifyContent="center"
-                alignItems="center">
-
-                <Grid item xs={12} sm={4}>
-                    <Typography variant="h5" align="center" gutterBottom>Candidato</Typography>
-                    <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
-                        {isFetching ? <CircularProgress size="150px" /> :
-                            <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
+                <Typography
+                    variant="h2"
+                    align="center"
+                    gutterBottom
+                    sx={{
+                        color: '#D81B60', 
+                        fontWeight: 'bold',
+                        marginBottom: '2em'
+                    }}
+                >
+                    Tinder de Perritos
+                </Typography>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    startIcon={<ExpandMoreIcon />}
+                    onClick={() => onChange()}
+                    sx={{
+                        margin: '20px',
+                        borderColor: 'pink',
+                        '&:hover': {
+                            borderColor: 'green',
+                            backgroundColor: 'green',
+                            color: 'white',
+                        },
+                        transition: 'transform 0.3s',
+                        '&:hover': {
+                            transform: 'scale(1.1)',
                         }
-                    </div>
-                </Grid>
+                    }}
+                >
+                    {isCat ? "Cambiar a Perrito" : "Cambiar a Gatito"}            </Button>
+                <Grid
+                    container
+                    spacing={4}
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center">
 
-                <Grid item xs={12} sm={4}>
-                    <Typography variant="h5" align="center" gutterBottom>Me gusta</Typography>
-                    <Box
-                        sx={{
-                            width: '40vh',
-                            height: '50vh',
-                            backgroundColor: 'primary.dark',
-                            '&:hover': {
-                                backgroundColor: 'primary.main',
-                                opacity: [0.9, 0.8, 0.7],
-                            },
-                        }}
-                    >
-                        <List
+                    <Grid item xs={12} sm={4}>
+                        <Typography variant="h5" align="center" gutterBottom>Candidato</Typography>
+                        <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
+                            {isFetching ? <CircularProgress size="150px" /> :
+                                <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
+                            }
+                        </div>
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                        <Typography variant="h5" align="center" gutterBottom>Me gusta</Typography>
+                        <Box
                             sx={{
-                                width: '100%',
-                                height: '100%',
-                                bgcolor: '#242424',
-                                position: 'relative',
-                                overflow: 'auto',
+                                width: '40vh',
+                                height: '50vh',
+                                backgroundColor: 'primary.dark',
+                                '&:hover': {
+                                    backgroundColor: 'primary.main',
+                                    opacity: [0.9, 0.8, 0.7],
+                                },
                             }}
-                            subheader={<li />}
                         >
+                            <List
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    bgcolor: '#242424',
+                                    position: 'relative',
+                                    overflow: 'auto',
+                                }}
+                                subheader={<li />}
+                            >
 
-                            {likedDogs.map((dog, index) => (
-                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
-                            ))}
+                                {likedDogs.map((dog, index) => (
+                                    <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
+                                ))}
 
-                        </List>
-                    </Box>
-                </Grid>
+                            </List>
+                        </Box>
+                    </Grid>
 
-                <Grid item xs={12} sm={4}>
-                    <Typography variant="h5" align="center" gutterBottom>No me gusta</Typography>
-                    <Box
-                        sx={{
-                            width: '40vh',
-                            height: '50vh',
-                            backgroundColor: 'primary.dark',
-                            '&:hover': {
-                                backgroundColor: 'primary.main',
-                                opacity: [0.9, 0.8, 0.7],
-                            },
-                        }}
-                    >
-                        <List
+                    <Grid item xs={12} sm={4}>
+                        <Typography variant="h5" align="center" gutterBottom>No me gusta</Typography>
+                        <Box
                             sx={{
-                                width: '100%',
-                                height: '100%',
-                                bgcolor: '#242424',
-                                position: 'relative',
-                                overflow: 'auto',
-                                '& ul': { padding: 0 },
-
+                                width: '40vh',
+                                height: '50vh',
+                                backgroundColor: 'primary.dark',
+                                '&:hover': {
+                                    backgroundColor: 'primary.main',
+                                    opacity: [0.9, 0.8, 0.7],
+                                },
                             }}
-                            subheader={<li />}
                         >
-                            {dislikedDogs.map((dog, index) => (
-                                <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'liked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
-                            ))}
+                            <List
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    bgcolor: '#242424',
+                                    position: 'relative',
+                                    overflow: 'auto',
+                                    '& ul': { padding: 0 },
 
-                        </List>
-                    </Box>
+                                }}
+                                subheader={<li />}
+                            >
+                                {dislikedDogs.map((dog, index) => (
+                                    <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'liked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
+                                ))}
+
+                            </List>
+                        </Box>
+                    </Grid>
                 </Grid>
-            </Grid>
-
+            </Box>
         </>
 
     )

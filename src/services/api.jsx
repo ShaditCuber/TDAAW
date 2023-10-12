@@ -47,7 +47,6 @@ export const loadDog = async (isCat = false) => {
         show_description : false,
     };
     dog.image = data.message || data[0].url;
-    console.log(dog)
     try {
         const response = await axios.get(dog.image);
 
