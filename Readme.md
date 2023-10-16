@@ -1,21 +1,21 @@
 # 🐶 Tinder para Perritos en React 🐕
 
-¡Bienvenido a nuestra aplicación de Tinder para perritos en React! Esta es una aplicación divertida y encantadora diseñada para encontrar compañeros caninos para tus amigos peludos. Desliza a la derecha si te gusta, a la izquierda si no te gusta, y encuentra el compañero perfecto para tu perro.
+¡Bienvenido a nuestra aplicación de Tinder para perritos en React! Esta es una aplicación divertida y encantadora diseñada para encontrar compañeros caninos para tus amigos peludos.
 
 ## Integrantes del Grupo
 
 Este proyecto fue desarrollado con amor por:
 
 - **Felipe Ignacio Bastidas López**
-  - GitHub: [usuario_felipe](https://github.com/ShaditCuber)
+  - GitHub: [Felipe](https://github.com/ShaditCuber)
 
 - **Jorge Fernandez Enriquez**
-  - GitHub: [usuario_jorge](https://github.com/JorgeFernandezEnriquez)
+  - GitHub: [Jorge](https://github.com/JorgeFernandezEnriquez)
 
 ## Funcionalidades Principales
 
 - Perfiles de perros con fotos y descripciones.
-- Deslizar a la derecha (me gusta) o a la izquierda (no me gusta) en perfiles de perros.
+- Presionar botones para dar like , dislike y arrepentirse.
 
 ## Requisitos de Instalación
 

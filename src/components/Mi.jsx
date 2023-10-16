@@ -31,7 +31,6 @@ export default function DogCard({ onLike, onDislike, isMain, dog, arrepentirse, 
     }, [openedDescriptionDog, dog.id]);
 
 
-    const fontSizeResponsive = isMain ? 'h2' : 'h6';
     return (
         <>
             <Card sx={styles}>

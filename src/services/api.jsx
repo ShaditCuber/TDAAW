@@ -35,9 +35,8 @@ export const loadDog = async (isCat = false) => {
     }
     const [queryName, paramsFilter] = isCat.queryKey;
 
-    console.log(URL[paramsFilter])
     const { data } = await axios.get(URL[paramsFilter]);
-    const random = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+    const random = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
     const dog_name = generateRandomName()
     const dog = {
         // colocarle a cada mascota unn uuid
@@ -47,16 +46,22 @@ export const loadDog = async (isCat = false) => {
         show_description : false,
     };
     dog.image = data.message || data[0].url;
-    try {
-        const response = await axios.get(dog.image);
 
-        if (response.status !== 200) {
-            dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
-        }
-
-    } catch (error) {
-        console.error(error);
+    // lulu2.jpg si el nombre es lulu2.jpg cambiar la imagen por una imagen de error
+    if (dog.image.includes('lulu2.jpg')) {
+        dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
     }
+
+    // try {
+    //     const response = await axios.get(dog.image);
+
+    //     if (response.status !== 200) {
+    //         dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
+    //     }
+
+    // } catch (error) {
+    //     console.error(error);
+    // }
 
     return dog;
 }

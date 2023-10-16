@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import DogCard from '../components/Mi';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
@@ -14,7 +14,6 @@ import { useLoadDog } from '../services/api';
 export default function App() {
     const [likedDogs, setLikedDogs] = useState([]);
     const [dislikedDogs, setDislikedDogs] = useState([]);
-    const [currentDog, setCurrentDog] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
     const [shouldRefetch, setShouldRefetch] = useState(false);
     const [isCat, setIsCat] = useState(false);
@@ -23,7 +22,7 @@ export default function App() {
 
 
     const onLike = (dog) => {
-        if (isFetching) { return };
+        if (isFetching) { return }
         setIsFetching(true);
         setLikedDogs((prevDogs) => [dog, ...prevDogs]);
         setTimeout(() => {
@@ -33,7 +32,7 @@ export default function App() {
     };
 
     const onDislike = (dog) => {
-        if (isFetching) { return };
+        if (isFetching) { return }
         setIsFetching(true);
         setDislikedDogs((prevDogs) => [dog, ...prevDogs]);
         setTimeout(() => {
@@ -59,9 +58,12 @@ export default function App() {
 
 
     const onArrepentirse = (dog, targetList) => {
-        if (isFetching) { return };
+        if (isFetching) { return }
         setIsFetching(true);
-
+        // cerrar la descripción si está abierta
+        if (dog.id === openedDescriptionDog) {
+            setOpenedDescriptionDog(null);
+        }
         if (targetList === 'disliked') {
             setLikedDogs((prevDogs) => prevDogs.filter((d) => d.name !== dog.name));
             setDislikedDogs((prevDogs) => [dog, ...prevDogs])
@@ -81,8 +83,8 @@ export default function App() {
             <Box
                 sx={{
                     backgroundColor: '#F7E0D3',
-                    minHeight: '90vh', 
-                    padding: '1em', 
+                    minHeight: '90vh',
+                    padding: '1em',
                 }}
             >
                 <Typography
@@ -90,30 +92,30 @@ export default function App() {
                     align="center"
                     gutterBottom
                     sx={{
-                        color: '#D81B60', 
+                        color: '#D81B60',
                         fontWeight: 'bold',
                         marginBottom: '2em'
                     }}
                 >
-                    Tinder de Perritos
+                    Tinder de {isCat ? "Gatitos" : "Perritos"}
                 </Typography>
                 <Button
                     variant="outlined"
                     color="secondary"
-                    startIcon={<ExpandMoreIcon />}
                     onClick={() => onChange()}
                     sx={{
                         margin: '20px',
                         borderColor: 'pink',
+                        backgroundColor: 'white',
+                        color: '#D81B60',
                         '&:hover': {
                             borderColor: 'green',
                             backgroundColor: 'green',
                             color: 'white',
+                            transform: 'scale(1.1)',
                         },
                         transition: 'transform 0.3s',
-                        '&:hover': {
-                            transform: 'scale(1.1)',
-                        }
+
                     }}
                 >
                     {isCat ? "Cambiar a Perrito" : "Cambiar a Gatito"}            </Button>
@@ -125,7 +127,7 @@ export default function App() {
                     alignItems="center">
 
                     <Grid item xs={12} sm={4}>
-                        <Typography variant="h5" align="center" gutterBottom>Candidato</Typography>
+                        <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>Candidato</Typography>
                         <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
                             {isFetching ? <CircularProgress size="150px" /> :
                                 <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
@@ -134,7 +136,7 @@ export default function App() {
                     </Grid>
 
                     <Grid item xs={12} sm={4}>
-                        <Typography variant="h5" align="center" gutterBottom>Me gusta</Typography>
+                        <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>Me gusta</Typography>
                         <Box
                             sx={{
                                 width: '40vh',
@@ -148,9 +150,10 @@ export default function App() {
                         >
                             <List
                                 sx={{
+                                    border: '1px solid black',
                                     width: '100%',
                                     height: '100%',
-                                    bgcolor: '#242424',
+                                    bgcolor: '#F7E0D3',
                                     position: 'relative',
                                     overflow: 'auto',
                                 }}
@@ -166,7 +169,7 @@ export default function App() {
                     </Grid>
 
                     <Grid item xs={12} sm={4}>
-                        <Typography variant="h5" align="center" gutterBottom>No me gusta</Typography>
+                        <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>No me gusta</Typography>
                         <Box
                             sx={{
                                 width: '40vh',
@@ -180,9 +183,10 @@ export default function App() {
                         >
                             <List
                                 sx={{
+                                    border: '1px solid black',
                                     width: '100%',
                                     height: '100%',
-                                    bgcolor: '#242424',
+                                    bgcolor: '#F7E0D3',
                                     position: 'relative',
                                     overflow: 'auto',
                                     '& ul': { padding: 0 },
