@@ -1,16 +1,17 @@
-import Main from './Pages/Main';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-
+import RouterApp from './routers/Router';
+import { AuthContextProvider } from './context/AuthContext';
 const queryClient = new QueryClient();
 
 export default function App() {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <Main></Main>
-      </QueryClientProvider >
+      <AuthContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterApp />
+        </QueryClientProvider >
+      </AuthContextProvider>
     </>
 
   );
