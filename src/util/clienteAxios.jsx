@@ -24,13 +24,14 @@ clienteAxios.interceptors.request.use(
 
 clienteAxios.interceptors.response.use(
     function (response) {
-        if (response.data.codigo === 401) {
-            window.location = "/login";
+        if (response.data.codigo === 401 || response.data.status === "Token is Expired") {
+            window.location = "/";
         }
 
         if (response.data.codigo === 403) {
             //error de permisos
         }
+        
 
         return response;
     },

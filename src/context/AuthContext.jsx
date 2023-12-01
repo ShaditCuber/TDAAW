@@ -16,7 +16,7 @@ const UsuarioProvider = (props) => {
     const { mutate, isLoading: cargandoUsuario } = useMutation(useIniciarSesion, {
         onSuccess: (response) => {
             console.log(response);
-            setToken(response.access_token);
+            setToken(response.token);
             getUsuario();
             window.location = "/";
         },
@@ -38,7 +38,7 @@ const UsuarioProvider = (props) => {
             return;
         }
         try {
-            const { data } = await clienteAxios.get("/user");
+            const { data } = await clienteAxios.get("user/info");
             setUsuario(data);
         } catch (error) {
             console.log(error);
@@ -47,7 +47,7 @@ const UsuarioProvider = (props) => {
 
     const logout = async () => {
         setUsuario(null);
-        const { data } = await clienteAxios.get("/logout");
+        const { data } = await clienteAxios.get("auth/logout");
         deleteToken();
         window.location = "/login";
     };
