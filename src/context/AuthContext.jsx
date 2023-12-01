@@ -1,43 +1,74 @@
-import { useReducer, createContext, useEffect } from 'react';
-import { decodeToken } from 'react-jwt';
+import React, { createContext, useContext, useState, useMemo, useEffect } from "react";
+import { setToken, getToken, deleteToken } from "../util/usuario";
+import { useIniciarSesion } from "../queries/AuthQueries/queryLogin";
+import { useMutation } from "@tanstack/react-query";
+import clienteAxios from "../util/clienteAxios";
 
-export const AuthContext = createContext();
-const token = sessionStorage.getItem('user');
-const decodedToken = decodeToken(token);
+const UsuarioContext = createContext();
 
-const initialState = {
-    user: null || decodedToken,
-    token: null || token,
-    error: null,
-};
+const UsuarioProvider = (props) => {
 
-export const authReducer = (state, action) => {
-    switch (action.type) {
-        case 'LOGIN':
-            return { ...state, token: action.payload };
-        case 'LOGOUT':
-            return { ...state, token: null, user: null };
-        case 'DATAUSER':
-            return { ...state, user: action.payload };
-        default:
-            return state;
-    }
-};
 
-export const AuthContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(authReducer, initialState);
+    const [usuario, setUsuario] = useState(null);
+
+
+
+    const { mutate, isLoading: cargandoUsuario } = useMutation(useIniciarSesion, {
+        onSuccess: (response) => {
+            console.log(response);
+            setToken(response.access_token);
+            getUsuario();
+            window.location = "/";
+        },
+        onError: (error) => {
+            setToken(null);
+        },
+    });
 
     useEffect(() => {
-        if (!token) {
+        getUsuario();
+    }, []);
+
+    const loginUsuario = async (form) => {
+        mutate(form);
+    };
+
+    const getUsuario = async () => {
+        if (!getToken()) {
             return;
         }
-        const decodedToken = decodeToken(token);
-        dispatch({ type: 'LOGIN', payload: token });
-        dispatch({ type: 'DATAUSER', payload: decodedToken });
-    }, []);
-    return (
-        <AuthContext.Provider value={{ ...state, dispatch }}>
-            {children}
-        </AuthContext.Provider>
-    );
-}
+        try {
+            const { data } = await clienteAxios.get("/user");
+            setUsuario(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const logout = async () => {
+        setUsuario(null);
+        const { data } = await clienteAxios.get("/logout");
+        deleteToken();
+        window.location = "/login";
+    };
+
+    const value = useMemo(() => {
+        return {
+            usuario,
+            cargandoUsuario,
+            loginUsuario,
+            logout
+        };
+    }, [usuario, cargandoUsuario, loginUsuario, logout]);
+
+    return <UsuarioContext.Provider
+        value={value}
+        {...props}
+    />;
+};
+
+const useUsuario = () => {
+    return useContext(UsuarioContext);
+};
+
+export { UsuarioProvider, useUsuario };

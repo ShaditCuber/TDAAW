@@ -1,0 +1,19 @@
+import { Box } from "@mui/material";
+
+export default function ErrorPage() {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <h1>Oops!</h1>
+            <p>Tu no has visto nada!</p>
+            {/* Asegúrate de reemplazar 'path_to_your_gif.gif' con la ruta correcta */}
+            <img src="https://media.tenor.com/K_oHvIkUao8AAAAC/no-has-visto-nada-ping%C3%BCino-madagascar.gif" alt="Error GIF" />
+        </Box>
+    );
+}

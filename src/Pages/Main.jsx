@@ -11,7 +11,7 @@ import {
     Grid
 } from "@mui/material";
 import { useLoadDog } from '../services/api';
-export default function App() {
+export default function Main() {
     const [likedDogs, setLikedDogs] = useState([]);
     const [dislikedDogs, setDislikedDogs] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
