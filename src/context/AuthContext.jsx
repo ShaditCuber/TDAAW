@@ -51,7 +51,7 @@ const UsuarioProvider = (props) => {
         setUsuario(null);
         const { data } = await clienteAxios.get("auth/logout");
         deleteToken();
-        window.location = "/login";
+        window.location = "/";
     };
 
     const value = useMemo(() => {

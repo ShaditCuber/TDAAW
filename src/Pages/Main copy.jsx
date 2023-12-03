@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useLoadDog } from '../services/api';
 import SeleccionarPerroModal from '../components/SeleccionarPerroModal';
-
+import { set } from 'react-hook-form';
 export default function Main() {
     const [likedDogs, setLikedDogs] = useState([]);
     const [dislikedDogs, setDislikedDogs] = useState([]);
@@ -29,8 +29,7 @@ export default function Main() {
 
     useEffect(() => {
 
-        setLikedDogs(array_accept(usuario.perro_id));
-        setDislikedDogs(array_reject(usuario.perro_id));
+        // setLikedDogs(array_accept(usuario.perro_id));
         // console.log(usuario)
         const asignarPerro = async () => {
             if (usuario && usuario.perro_id === null) {
@@ -42,13 +41,13 @@ export default function Main() {
             }
         };
         asignarPerro();
-    }, [usuario]);
-
-
+    }, []);
+    
+    
 
     const onLike = (dog) => {
         if (isFetching) { return }
-        interaccion(usuario.perro_id, dog.id, 'aceptado');
+        interaccion(usuario.perro_id, dog.id,  'aceptado');
         setIsFetching(true);
         // array_accept()
         setLikedDogs((prevDogs) => [dog, ...prevDogs]);
@@ -60,7 +59,7 @@ export default function Main() {
 
     const onDislike = (dog) => {
         if (isFetching) { return }
-        interaccion(usuario.perro_id, dog.id, 'rechazado');
+        interaccion(usuario.perro_id, dog.id,'rechazado');
         setIsFetching(true);
         // array_reject();
         setDislikedDogs((prevDogs) => [dog, ...prevDogs]);
@@ -70,55 +69,55 @@ export default function Main() {
         setShouldRefetch(true);
     };
 
-    async function array_accept() {
-        try {
-            let new_array = []
-            const aceptados_array = await aceptados(usuario.perro_id);
-            if (aceptados_array && Array.isArray(aceptados_array.aceptados)) {
+    // async function array_accept() {
+    //     try {
+    //         let new_array = []
+    //         const aceptados_array = await aceptados(usuario.perro_id);
+    //         if (aceptados_array && Array.isArray(aceptados_array.aceptados)) {
+                
+    //             // recorerer los perros y cambiar sus keys
+    //             for (let i = 0; i < aceptados_array.aceptados.length; i++) {
+    //                 const dog = {
+    //                     id: aceptados_array.aceptados[i].id,
+    //                     name: aceptados_array.aceptados[i].nombre,
+    //                     description: aceptados_array.aceptados[i].descripcion,
+    //                     image: aceptados_array.aceptados[i].url_foto,
+    //                 };
+    //                 new_array.push(dog);
+    //             }
+    //             setLikedDogs(new_array);
 
-                // recorerer los perros y cambiar sus keys
-                for (let i = 0; i < aceptados_array.aceptados.length; i++) {
-                    const dog = {
-                        id: aceptados_array.aceptados[i].id,
-                        name: aceptados_array.aceptados[i].nombre,
-                        description: aceptados_array.aceptados[i].descripcion,
-                        image: aceptados_array.aceptados[i].url_foto,
-                    };
-                    new_array.push(dog);
-                }
-                setLikedDogs(new_array);
+    //         }
+    //         return []; // Devuelve un array vacío si la respuesta no es válida
+    //     } catch (error) {
+    //         console.error("Error al obtener perros aceptados:", error);
+    //         return []; // Devuelve un array vacío en caso de error
+    //     }
+    // }
 
-            }
-            return []; // Devuelve un array vacío si la respuesta no es válida
-        } catch (error) {
-            console.error("Error al obtener perros aceptados:", error);
-            return []; // Devuelve un array vacío en caso de error
-        }
-    }
-
-    async function array_reject() {
-        try {
-            let new_array = []
-            const rechazados_array = await rechazados(usuario.perro_id);
-            if (rechazados_array && Array.isArray(rechazados_array.rechazados)) {
-                // recorerer los perros y cambiar sus keys
-                for (let i = 0; i < rechazados_array.rechazados.length; i++) {
-                    const dog = {
-                        id: rechazados_array.rechazados[i].id,
-                        name: rechazados_array.rechazados[i].nombre,
-                        description: rechazados_array.rechazados[i].descripcion,
-                        image: rechazados_array.rechazados[i].url_foto,
-                    };
-                    new_array.push(dog);
-                }
-                setDislikedDogs(new_array);
-            }
-            return []; // Devuelve un array vacío si la respuesta no es válida
-        } catch (error) {
-            console.error("Error al obtener perros rechazados:", error);
-            return []; // Devuelve un array vacío en caso de error
-        }
-    }
+    // async function array_reject() {
+    //     try {
+    //         let new_array = []
+    //         const rechazados_array = await rechazados(usuario.perro_id);
+    //         if (rechazados_array && Array.isArray(rechazados_array.rechazados)) {
+    //             // recorerer los perros y cambiar sus keys
+    //             for (let i = 0; i < rechazados_array.rechazados.length; i++) {
+    //                 const dog = {
+    //                     id: rechazados_array.rechazados[i].id,
+    //                     name: rechazados_array.rechazados[i].nombre,
+    //                     description: rechazados_array.rechazados[i].descripcion,
+    //                     image: rechazados_array.rechazados[i].url_foto,
+    //                 };
+    //                 new_array.push(dog);
+    //             }
+    //             setDislikedDogs(new_array);
+    //         }
+    //         return []; // Devuelve un array vacío si la respuesta no es válida
+    //     } catch (error) {
+    //         console.error("Error al obtener perros rechazados:", error);
+    //         return []; // Devuelve un array vacío en caso de error
+    //     }
+    // }
 
 
     useEffect(() => {
@@ -128,10 +127,10 @@ export default function Main() {
             refetch();
             setShouldRefetch(false);
         }
-
+        
     }, [shouldRefetch]);
 
-    let { data: dog, isLoading, refetch } = useLoadDog(usuario.perro_id, isCat)
+    let { data: dog, isLoading, refetch } = useLoadDog(usuario.perro_id,isCat)
 
     if (isLoading) { return <CircularProgress size="150px" /> }
 
@@ -295,10 +294,10 @@ export default function Main() {
                 </Grid>
                 <Grid container spacing={5} alignItems="center" justifyContent="center" p={5}>
                     <Grid item>
-                        <Typography variant="h3" align="center" sx={{ color: 'black', fontWeight: 'bold' }}>Tu Perrito</Typography>
+                        <Typography variant="h3" align="center"  sx={{ color: 'black', fontWeight: 'bold' }}>Tu Perrito</Typography>
                     </Grid>
                     <Grid item>
-
+                        
                         {perroUsuario && (
                             <>
                                 <Typography variant="h6" color='black'>{perroUsuario.perro.nombre}</Typography>
@@ -329,6 +328,8 @@ export default function Main() {
         </>
 
     )
+
+
 
 }
 

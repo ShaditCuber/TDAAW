@@ -16,7 +16,7 @@ clienteAxios.interceptors.request.use(
     function (error) {
         console.log('error', error);
         if (error.response.status === 401) {
-            window.location = "/login";
+            window.location = "/";
         }
         return Promise.reject(error);
     }
@@ -38,7 +38,7 @@ clienteAxios.interceptors.response.use(
     function (error) {
         console.log(error);
         if (error.response.status === 400) {
-            window.location = "/login";
+            window.location = "/";
         } else {
             return Promise.reject(error);
         }

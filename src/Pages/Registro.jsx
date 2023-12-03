@@ -1,37 +1,39 @@
-// Registro.js
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Container, Grid, Card, Button, CardActions } from "@mui/material";
-import CustomTextField from "./CustomComponents/CustomTextfield"; // Asegúrate de que la ruta sea correcta
-import { useRegistro } from "../queries/AuthQueries/queryLogin";
+import CustomTextField from "./CustomComponents/CustomTextfield";
+import { useIniciarSesion, useRegistro } from "../queries/AuthQueries/queryLogin";
 import { toast } from 'sonner';
-
-
+import SeleccionarPerro from "../components/SeleccionarPerro";
+import { useUsuario } from "../context/AuthContext";
+import { setToken, getToken, deleteToken } from "../util/usuario";
 
 const Registro = () => {
     const { handleSubmit, control } = useForm({
-        defaultValues: {name : "" , email: "", password: "", confirmPassword: "" },
+        defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
     });
-
+    const [registerStep, setRegisterStep] = useState(1); // Estado para manejar los pasos de registro
+    const { loginUsuario } = useUsuario();
     async function register(form) {
-        const data = await useRegistro(form)
+        const data = await useRegistro(form);
         toast.success(data['message']);
-        if (data['message'] === "Usuario registrado!" ) {
-            window.location = "/login";
+        if (data['message'] === "Usuario registrado!") {
+            // En lugar de redirigir, cambiar al paso 2
+            setRegisterStep(2);
         }
     }
 
-    const onSubmit = (data) => {
+    const onSubmit = async  (data) => {
         console.log("Datos de registro", data);
 
-        // que las contraseñas coincidan
         if (data.password !== data.confirmPassword) {
             toast.error('Las contraseñas no coinciden');
             return;
         }
 
-        register(data);
-
+        await register(data);
+        const response = await useIniciarSesion(data);
+        setToken(response.token);
     };
 
     return (
@@ -41,47 +43,52 @@ const Registro = () => {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                style={{ height: "100vh" }} // Centra el formulario verticalmente
+                style={{ height: "100vh" }}
             >
                 <Grid item xs={12} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Card>
-                            <CustomTextField
-                                label="Nombre"
-                                name="name"
-                                type="text"
-                                control={control}
-                            />
-                            <CustomTextField
-                                label="Correo Electrónico"
-                                name="email"
-                                type="email"
-                                control={control}
-                            />
-                            <CustomTextField
-                                label="Contraseña"
-                                name="password"
-                                type="password"
-                                control={control}
-                            />
-                            <CustomTextField
-                                label="Repetir Contraseña"
-                                name="confirmPassword"
-                                type="password"
-                                control={control}
-                            />
-                            <CardActions>
-                                <Button
-                                    type="submit"
-                                    color="primary"
-                                    variant="contained"
-                                    fullWidth
-                                >
-                                    Registrarse
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    </form>
+                    {registerStep === 1 && (
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <Card>
+                                <CustomTextField
+                                    label="Nombre"
+                                    name="name"
+                                    type="text"
+                                    control={control}
+                                />
+                                <CustomTextField
+                                    label="Correo Electrónico"
+                                    name="email"
+                                    type="email"
+                                    control={control}
+                                />
+                                <CustomTextField
+                                    label="Contraseña"
+                                    name="password"
+                                    type="password"
+                                    control={control}
+                                />
+                                <CustomTextField
+                                    label="Repetir Contraseña"
+                                    name="confirmPassword"
+                                    type="password"
+                                    control={control}
+                                />
+                                <CardActions>
+                                    <Button
+                                        type="submit"
+                                        color="primary"
+                                        variant="contained"
+                                        fullWidth
+                                    >
+                                        Registrarse
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </form>
+                    )}
+                    {registerStep === 2 && (
+                        <SeleccionarPerro />
+                    )}
                 </Grid>
             </Grid>
         </Container>

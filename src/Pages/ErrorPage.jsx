@@ -1,6 +1,12 @@
 import { Box } from "@mui/material";
+import {deleteToken } from "../util/usuario";
+
+
 
 export default function ErrorPage() {
+
+    deleteToken();
+
     return (
         <Box
             sx={{
