@@ -22,6 +22,12 @@ const Login = () => {
         loginUsuario(data);
     };
 
+    const handleRegister = () => {
+        window.location = "/register";
+    }
+
+
+
     return (
         <Container>
             <Grid
@@ -59,14 +65,24 @@ const Login = () => {
                             </Grid>
                             <CardActions>
                                 <Button
-                                    id="terminar_registro"
+                                    id="iniciar_sesion"
                                     color="primary"
                                     size="large"
                                     type="submit"
                                     variant="contained"
-                                    sx={{ r: 0 }}
+                                    sx={{ mr: 1 }}  // Agregado un margen a la derecha
                                 >
                                     Iniciar Sesión
+                                </Button>
+                                <Button
+                                    id="registrarse"
+                                    color="secondary"
+                                    size="large"
+                                    variant="contained"
+                                    sx={{ ml: 1 }}  // Agregado un margen a la izquierda
+                                    onClick={handleRegister}  // Función que se activará al hacer clic
+                                >
+                                    Registrarse
                                 </Button>
                             </CardActions>
                         </Card>

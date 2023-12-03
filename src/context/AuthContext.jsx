@@ -3,6 +3,7 @@ import { setToken, getToken, deleteToken } from "../util/usuario";
 import { useIniciarSesion } from "../queries/AuthQueries/queryLogin";
 import { useMutation } from "@tanstack/react-query";
 import clienteAxios from "../util/clienteAxios";
+import { get } from "react-hook-form";
 
 const UsuarioContext = createContext();
 
@@ -34,6 +35,7 @@ const UsuarioProvider = (props) => {
     };
 
     const getUsuario = async () => {
+        console.log("Token actual:", getToken()); // Agregar esta línea
         if (!getToken()) {
             return;
         }

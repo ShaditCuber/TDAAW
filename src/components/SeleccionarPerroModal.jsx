@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, Modal, Card, CardMedia, CardActions } from "@mui/material";
 import { obtenerPerro, obtenerPerroAleatorio, actualizarUsuario } from '../queries/services/services';
 
@@ -21,6 +21,10 @@ export default function SeleccionarPerroModal({ abierto, cerrarModal, perroActua
             window.location.reload();
         }
     };
+
+    useEffect(() => {
+        cambiarPerro();
+    }, []);
 
     return (
         <Modal

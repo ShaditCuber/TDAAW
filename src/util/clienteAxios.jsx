@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "./usuario";
 
 const clienteAxios = axios.create({
-    baseURL: "http://localhost:8000/api/",
+    baseURL: "http://127.0.0.1:8080/api/",
 });
 
 clienteAxios.interceptors.request.use(
@@ -37,7 +37,7 @@ clienteAxios.interceptors.response.use(
     },
     function (error) {
         console.log(error);
-        if (error.response.status === 401) {
+        if (error.response.status === 400) {
             window.location = "/login";
         } else {
             return Promise.reject(error);
@@ -45,6 +45,5 @@ clienteAxios.interceptors.response.use(
     }
 );
 
-// documentacion de interceptors --> https://axios-http.com/docs/interceptors
 
 export default clienteAxios;

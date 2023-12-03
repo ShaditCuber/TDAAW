@@ -3,6 +3,7 @@ import Main from "./src/Pages/Main";
 import ErrorPage from "./src/Pages/ErrorPage";
 // import PokeDetalle from "./src/Pages/Components/PokeDetalle";
 import Login from "./src/Pages/Login";
+import Registro from "./src/Pages/Registro";
 import { useUsuario } from "./src/context/AuthContext";
 // import RandomPoke from "./src/Pages/RandomPoke";
 
@@ -16,6 +17,9 @@ const NotLogedRoutes = () => {
         <>
             <Routes>
                 <Route exact path="/" element={<Login />} />
+                {/* <Route exact path="/" element={<Main />} /> */}
+                <Route exact path="/register" element={<Registro />} />
+
                 <Route path='*' element={<ErrorPage />} />
             </Routes>
         </>
