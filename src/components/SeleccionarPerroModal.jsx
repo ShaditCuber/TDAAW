@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, Modal, Card, CardMedia, CardActions } from "@mui/material";
-import { obtenerPerro, obtenerPerroAleatorio, actualizarUsuario } from '../queries/services/services';
+import { obtenerPerro, useObtenerPerroAleatorio, actualizarUsuario } from '../queries/queries';
 
 export default function SeleccionarPerroModal({ abierto, cerrarModal, perroActual, setPerroUsuario, actualizarUsuario }) {
     const [perroSeleccionado, setPerroSeleccionado] = useState(perroActual);
 
     // Función para obtener un perro aleatorio
     const cambiarPerro = async () => {
-        const perroAleatorio = await obtenerPerroAleatorio();
+        const perroAleatorio = useObtenerPerroAleatorio();
         const perro = await obtenerPerro(perroAleatorio.perro.id)
         setPerroSeleccionado(perro);
     };
@@ -37,7 +37,7 @@ export default function SeleccionarPerroModal({ abierto, cerrarModal, perroActua
             }}
         >
             <Box sx={{ width: 400, bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>
-                <Typography variant="h6" align="center" sx={{ marginBottom: '20px', color : 'black'}}>
+                <Typography variant="h6" align="center" sx={{ marginBottom: '20px', color: 'black' }}>
                     Registra a tu Perro Favorito para comenzar a buscarle pareja
                 </Typography>
                 {perroSeleccionado && (

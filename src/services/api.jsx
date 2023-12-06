@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { generateRandomName } from "../util";
 import { LoremIpsum } from "lorem-ipsum";
-import { obtenerCandidato } from "../queries/services/services";
+import { obtenerCandidato } from "../queries/queries";
 import { useUsuario } from "../context/AuthContext";
 
 
@@ -43,38 +43,38 @@ export const loadDog = async ({ queryKey }) => {
   };
 
 
-    // const URL = {
-    //     true: "https://api.thecatapi.com/v1/images/search",
-    //     false: "https://dog.ceo/api/breeds/image/random"
-    // }
-    // const [queryName, paramsFilter] = isCat.queryKey;
+  // const URL = {
+  //     true: "https://api.thecatapi.com/v1/images/search",
+  //     false: "https://dog.ceo/api/breeds/image/random"
+  // }
+  // const [queryName, paramsFilter] = isCat.queryKey;
 
-    // const { data } = await axios.get(URL[paramsFilter]);
-    // const random = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
-    // const dog_name = generateRandomName()
-    // const dog = {
-    //     // colocarle a cada mascota unn uuid
-    //     id: dog_name +'-' +random,
-    //     name: dog_name,
-    //     description: lorem.generateWords(random),
-    //     show_description : false,
-    // };
-    // dog.image = data.message || data[0].url;
+  // const { data } = await axios.get(URL[paramsFilter]);
+  // const random = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
+  // const dog_name = generateRandomName()
+  // const dog = {
+  //     // colocarle a cada mascota unn uuid
+  //     id: dog_name +'-' +random,
+  //     name: dog_name,
+  //     description: lorem.generateWords(random),
+  //     show_description : false,
+  // };
+  // dog.image = data.message || data[0].url;
 
-    // // lulu2.jpg si el nombre es lulu2.jpg cambiar la imagen por una imagen de error
-    // if (dog.image.includes('lulu2.jpg')) {
-    //     dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
-    // }
+  // // lulu2.jpg si el nombre es lulu2.jpg cambiar la imagen por una imagen de error
+  // if (dog.image.includes('lulu2.jpg')) {
+  //     dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
+  // }
 
-    try {
-        const response = await axios.get(dog.image);
-        if (response.status !== 200) {
-            dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
-        }
-
-    } catch (error) {
-        dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
+  try {
+    const response = await axios.get(dog.image);
+    if (response.status !== 200) {
+      dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
     }
 
-    return dog;
+  } catch (error) {
+    dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
+  }
+
+  return dog;
 }

@@ -20,7 +20,7 @@ const NotLogedRoutes = () => {
                 <Route exact path="/" element={<Login />} />
                 {/* <Route exact path="/" element={<Main />} /> */}
                 <Route exact path="/register" element={<Registro />} />
-                <Route path='*' element={<ErrorPage />} />
+                {/* <Route path='*' element={<ErrorPage />} /> */}
             </Routes>
         </>
     );
@@ -31,10 +31,10 @@ const LogedInRoutes = () => {
         <>
             <Routes>
                 <Route exact path="/dashboard" element={<Main />} />
-                <Route exact path="/seleccionar_perro" element={<SeleccionarPerro />} />
+                <Route  path="/seleccionar" element={<SeleccionarPerro />} />
                 {/* <Route path="pokedex" element={<RandomPoke />} /> */}
                 {/* <Route path="pokeDetalle/:pokeId" element={<PokeDetalle />} /> */}
-                <Route path='*' element={<ErrorPage />} />
+                {/* <Route path='*' element={<ErrorPage />} /> */}
             </Routes>
         </>
     );

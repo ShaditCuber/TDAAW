@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import DogCard from '../components/Mi';
 import Typography from '@mui/material/Typography';
 import { useUsuario } from "../context/AuthContext";
-import { aceptados, actualizarUsuario, interaccion, obtenerCandidato, obtenerPerro, obtenerPerroAleatorio, rechazados } from "../queries/services/services";
+import { aceptados, actualizarUsuario, interaccion, obtenerCandidato, obtenerPerro, rechazados } from "../queries/queries";
 import {
     Button,
     CircularProgress,
@@ -28,7 +28,7 @@ export default function Main() {
     const { usuario } = useUsuario();
     // const [error, setError] = useState(null);
 
-    const { data: dog, isLoading, refetch ,error} = useLoadDog(usuario.perro_id, isCat);
+    const { data: dog, isLoading, refetch, error } = useLoadDog(usuario.perro_id, isCat);
 
     useEffect(() => {
         // setDog(dog);

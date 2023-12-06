@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardMedia, CardContent, Typography, Button, Grid, Box, CardActions } from "@mui/material";
-import { actualizarUsuario, obtenerPerro, obtenerPerroAleatorio } from "../queries/services/services";
+import { actualizarUsuario, obtenerPerro, useObtenerPerroAleatorio } from "../queries/queries";
 
 const SeleccionarPerro = ({ onPerroSeleccionado }) => {
     const [perro, setPerro] = useState(null);
 
-    // const cargarPerroAleatorio = async () => {
-    //     console.log('Perro aleatorio')
-    //     const perroAleatorio = await obtenerPerroAleatorio();
-    //     console.log(perroAleatorio)
-    //     // const perro = await obtenerPerro(perroAleatorio.perro.id)
-    //     // setPerro(perro.perro);
-    // };
+    const cargarPerroAleatorio = async () => {
+        console.log('Perro aleatorio')
+        const perroAleatorio =  useObtenerPerroAleatorio();
+        console.log(perroAleatorio)
+        const perro = await obtenerPerro(perroAleatorio.perro.id)
+        setPerro(perro.perro);
+    };
 
     const aceptarPerro = async () => {
         if (perro) {
@@ -21,24 +21,15 @@ const SeleccionarPerro = ({ onPerroSeleccionado }) => {
     };
 
     const cambiarPerro = async () => {
-        const perroAleatorio = await obtenerPerroAleatorio();
+        const perroAleatorio = useObtenerPerroAleatorio();
         const perro = await obtenerPerro(perroAleatorio.perro.id)
         setPerro(perro.perro);
     }
+    console.log('Perro aleatorio')
 
-    useEffect(() => {
+    useEffect(() =>  {
         let montado = true;
-
-        const cargarPerroAleatorio = async () => {
-            console.log('Perro aleatorio')
-            const perroAleatorio = await obtenerPerroAleatorio();
-            if (montado) {
-                console.log(perroAleatorio)
-                // const perro = await obtenerPerro(perroAleatorio.perro.id)
-                // setPerro(perro.perro);
-            }
-        };
-
+        console.log('Perro aleatorio')
         cargarPerroAleatorio();
 
         return () => {
@@ -55,29 +46,29 @@ const SeleccionarPerro = ({ onPerroSeleccionado }) => {
                         Registra a tu Perro Favorito para comenzar a buscarle pareja
                     </Typography>
                     <Card>
-                        
-                            <CardMedia
-                                component="img"
-                                sx={{
-                                    width: '100%',
-                                    objectFit: 'cover',
-                                    maxHeight: '600px' 
-                                }}
-                                image={perro.url_foto}
-                                alt={`Imagen de ${perro.nombre}`}
-                            />
-                            <Typography gutterBottom variant="h5" component="div" sx={{ padding: '10px' }}>
-                                {perro.nombre}
-                            </Typography>
-                            <CardActions>
-                                <Button size="small" color="primary" onClick={aceptarPerro}>
-                                    Aceptar este Perro
-                                </Button>
-                                <Button size="small" color="secondary" onClick={cambiarPerro}>
-                                    Ver Otro Perro
-                                </Button>
-                            </CardActions>
-                        </Card>
+
+                        <CardMedia
+                            component="img"
+                            sx={{
+                                width: '100%',
+                                objectFit: 'cover',
+                                maxHeight: '600px'
+                            }}
+                            image={perro.url_foto}
+                            alt={`Imagen de ${perro.nombre}`}
+                        />
+                        <Typography gutterBottom variant="h5" component="div" sx={{ padding: '10px' }}>
+                            {perro.nombre}
+                        </Typography>
+                        <CardActions>
+                            <Button size="small" color="primary" onClick={aceptarPerro}>
+                                Aceptar este Perro
+                            </Button>
+                            <Button size="small" color="secondary" onClick={cambiarPerro}>
+                                Ver Otro Perro
+                            </Button>
+                        </CardActions>
+                    </Card>
                 </Box>
             )}
         </Grid>

@@ -3,6 +3,8 @@ import { setToken, getToken, deleteToken } from "../util/usuario";
 import { useIniciarSesion } from "../queries/AuthQueries/queryLogin";
 import { useMutation } from "@tanstack/react-query";
 import clienteAxios from "../util/clienteAxios";
+import { toast } from 'sonner';
+import { useGetInfo } from "../queries/queries";
 
 const UsuarioContext = createContext();
 
@@ -15,12 +17,16 @@ const UsuarioProvider = (props) => {
     const { mutate, isLoading: cargandoUsuario } = useMutation(useIniciarSesion, {
         onSuccess: async (response) => {
             console.log(response, 'Response');
-            const {token } = response;
+            const error = response?.error;
+            if (error) {
+                toast.error(error);
+                return;
+            }
+            const { token } = response;
             if (token) {
                 setToken(token);
             }
-            await getUsuario();
-            window.location = "/dashboard";
+            getUsuario();
         },
         onError: (error) => {
             setToken(null);
@@ -32,34 +38,34 @@ const UsuarioProvider = (props) => {
     }, []);
 
     useEffect(() => {
-        if (rutaRedireccion) {
-            window.location = rutaRedireccion;
+        if (usuario) {
+            if (!usuario?.perro_id) {
+                window.location = "/seleccionar";
+            }
+            else {
+                window.location = "/dashboard";
+            }
         }
-    }, [rutaRedireccion]);
+    }, [usuario]);
 
     const loginUsuario = async (form) => {
         mutate(form);
     };
 
     const getUsuario = async () => {
-        console.log("Token actual:", getToken()); // Agregar esta línea
+        console.log("Token actual:", getToken());
         if (!getToken()) {
             return;
         }
-        console.log("No hay token")
         try {
-            const { data } = await clienteAxios.get("user/info");
-            setUsuario(data);
-            console.log(data)
-            if (!data.perro_id) {
-                setRutaRedireccion("/seleccionar_perro");
-            } else {
-                setRutaRedireccion("/dashboard");
-            }
+            const response = await clienteAxios.get("/user/info");
+            console.log(response.data, 'Info');
+            setUsuario(response.data);
         } catch (error) {
             console.log(error);
         }
     };
+
 
     const logout = async () => {
         setUsuario(null);
