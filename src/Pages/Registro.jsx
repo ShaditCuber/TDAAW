@@ -6,7 +6,7 @@ import { useIniciarSesion, useRegistro } from "../queries/AuthQueries/queryLogin
 import { toast } from 'sonner';
 import SeleccionarPerro from "../components/SeleccionarPerro";
 import { useUsuario } from "../context/AuthContext";
-import { setToken, getToken, deleteToken } from "../util/usuario";
+import { setToken, getToken } from "../util/usuario";
 
 const Registro = () => {
     const { handleSubmit, control } = useForm({
@@ -17,10 +17,11 @@ const Registro = () => {
     async function register(form) {
         const data = await useRegistro(form);
         toast.success(data['message']);
-        if (data['message'] === "Usuario registrado!") {
-            // En lugar de redirigir, cambiar al paso 2
-            setRegisterStep(2);
-        }
+        window.location = "/"
+        // if (data['message'] === "Usuario registrado!") {
+        //     // En lugar de redirigir, cambiar al paso 2
+        //     setRegisterStep(2);
+        // }
     }
 
     const onSubmit = async  (data) => {
@@ -32,8 +33,8 @@ const Registro = () => {
         }
 
         await register(data);
-        const response = await useIniciarSesion(data);
-        setToken(response.token);
+        // const response = await useIniciarSesion(data);
+        // setToken(response.token);
     };
 
     return (

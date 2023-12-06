@@ -5,15 +5,13 @@ import { actualizarUsuario, obtenerPerro, obtenerPerroAleatorio } from "../queri
 const SeleccionarPerro = ({ onPerroSeleccionado }) => {
     const [perro, setPerro] = useState(null);
 
-    const cargarPerroAleatorio = async () => {
-        setTimeout( async () => {
-            const perroAleatorio = await obtenerPerroAleatorio();
-            console.log(perroAleatorio)
-            const perro = await obtenerPerro(perroAleatorio.perro.id)
-            setPerro(perro.perro);
-        }, 3000);
-        
-    };
+    // const cargarPerroAleatorio = async () => {
+    //     console.log('Perro aleatorio')
+    //     const perroAleatorio = await obtenerPerroAleatorio();
+    //     console.log(perroAleatorio)
+    //     // const perro = await obtenerPerro(perroAleatorio.perro.id)
+    //     // setPerro(perro.perro);
+    // };
 
     const aceptarPerro = async () => {
         if (perro) {
@@ -28,10 +26,26 @@ const SeleccionarPerro = ({ onPerroSeleccionado }) => {
         setPerro(perro.perro);
     }
 
-    // Cargar un perro aleatorio al montar el componente
     useEffect(() => {
+        let montado = true;
+
+        const cargarPerroAleatorio = async () => {
+            console.log('Perro aleatorio')
+            const perroAleatorio = await obtenerPerroAleatorio();
+            if (montado) {
+                console.log(perroAleatorio)
+                // const perro = await obtenerPerro(perroAleatorio.perro.id)
+                // setPerro(perro.perro);
+            }
+        };
+
         cargarPerroAleatorio();
+
+        return () => {
+            montado = false;
+        };
     }, []);
+
 
     return (
         <Grid container spacing={2} justifyContent="center" alignItems="center" style={{ height: "100vh" }}>

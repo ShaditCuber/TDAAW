@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import DogCard from '../components/Mi';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import { useUsuario } from "../context/AuthContext";
 import { aceptados, actualizarUsuario, interaccion, obtenerCandidato, obtenerPerro, obtenerPerroAleatorio, rechazados } from "../queries/services/services";
-
 import {
     Button,
     CircularProgress,
@@ -24,27 +22,31 @@ export default function Main() {
     const [isCat, setIsCat] = useState(false);
     const [openedDescriptionDog, setOpenedDescriptionDog] = useState(null);
     const [modalAbierto, setModalAbierto] = useState(false);
+    // const [dog, setDog] = useState(null);
     let [perroUsuario, setPerroUsuario] = useState(null);
+    // const [cargando, setCargando] = useState(false);
     const { usuario } = useUsuario();
+    // const [error, setError] = useState(null);
+
+    const { data: dog, isLoading, refetch ,error} = useLoadDog(usuario.perro_id, isCat);
 
     useEffect(() => {
+        // setDog(dog);
+        // setCargando(cargando);
+        console.log(dog);
+    }, [dog, isLoading]);
 
-        setLikedDogs(array_accept(usuario.perro_id));
-        setDislikedDogs(array_reject(usuario.perro_id));
-        // console.log(usuario)
-        const asignarPerro = async () => {
-            if (usuario && usuario.perro_id === null) {
-                setModalAbierto(true);
-            } else {
-                // console.log('else')
-                const perro_user = await obtenerPerro(usuario.perro_id);
-                setPerroUsuario(perro_user);
-            }
-        };
-        asignarPerro();
-    }, [usuario]);
+    if (isLoading) {
+        return <CircularProgress />; // Mostrar indicador de carga
+    }
 
+    if (error) {
+        return <Typography color="error">{error}</Typography>; // Mostrar mensaje de error
+    }
 
+    if (!dog) {
+        return <Typography>No hay un perro seleccionado.</Typography>; // Mensaje si no hay perro seleccionado
+    }
 
     const onLike = (dog) => {
         if (isFetching) { return }
@@ -131,9 +133,8 @@ export default function Main() {
 
     }, [shouldRefetch]);
 
-    let { data: dog, isLoading, refetch } = useLoadDog(usuario.perro_id, isCat)
 
-    if (isLoading) { return <CircularProgress size="150px" /> }
+
 
     const onChange = () => {
         setIsCat(!isCat);

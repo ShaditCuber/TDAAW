@@ -1,11 +1,12 @@
 import { Box } from "@mui/material";
 import {deleteToken } from "../util/usuario";
+import { useLocation } from "react-router-dom";
 
 
 
 export default function ErrorPage() {
-
-    deleteToken();
+    // saber que error es
+    // deleteToken();
 
     return (
         <Box

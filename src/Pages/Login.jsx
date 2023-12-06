@@ -18,7 +18,6 @@ const Login = () => {
     const { loginUsuario } = useUsuario();
 
     const onSubmit = (data) => {
-        console.log("data login", data);
         loginUsuario(data);
     };
 

@@ -3,7 +3,6 @@ import { setToken, getToken, deleteToken } from "../util/usuario";
 import { useIniciarSesion } from "../queries/AuthQueries/queryLogin";
 import { useMutation } from "@tanstack/react-query";
 import clienteAxios from "../util/clienteAxios";
-import { get } from "react-hook-form";
 
 const UsuarioContext = createContext();
 
@@ -11,15 +10,17 @@ const UsuarioProvider = (props) => {
 
 
     const [usuario, setUsuario] = useState(null);
-
-
+    const [rutaRedireccion, setRutaRedireccion] = useState(null);
 
     const { mutate, isLoading: cargandoUsuario } = useMutation(useIniciarSesion, {
-        onSuccess: (response) => {
-            console.log(response);
-            setToken(response.token);
-            getUsuario();
-            window.location = "/";
+        onSuccess: async (response) => {
+            console.log(response, 'Response');
+            const {token } = response;
+            if (token) {
+                setToken(token);
+            }
+            await getUsuario();
+            window.location = "/dashboard";
         },
         onError: (error) => {
             setToken(null);
@@ -30,6 +31,12 @@ const UsuarioProvider = (props) => {
         getUsuario();
     }, []);
 
+    useEffect(() => {
+        if (rutaRedireccion) {
+            window.location = rutaRedireccion;
+        }
+    }, [rutaRedireccion]);
+
     const loginUsuario = async (form) => {
         mutate(form);
     };
@@ -39,9 +46,16 @@ const UsuarioProvider = (props) => {
         if (!getToken()) {
             return;
         }
+        console.log("No hay token")
         try {
             const { data } = await clienteAxios.get("user/info");
             setUsuario(data);
+            console.log(data)
+            if (!data.perro_id) {
+                setRutaRedireccion("/seleccionar_perro");
+            } else {
+                setRutaRedireccion("/dashboard");
+            }
         } catch (error) {
             console.log(error);
         }
@@ -59,7 +73,7 @@ const UsuarioProvider = (props) => {
             usuario,
             cargandoUsuario,
             loginUsuario,
-            logout
+            logout,
         };
     }, [usuario, cargandoUsuario, loginUsuario, logout]);
 

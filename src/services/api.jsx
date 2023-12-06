@@ -33,6 +33,7 @@ export function useLoadDog(perroId, isCat = false) {
 
 export const loadDog = async ({ queryKey }) => {
   const [queryName, perroId, isCat] = queryKey;
+  console.log(perroId, 'perroId')
   const new_dog = await obtenerCandidato(perroId);
   const dog = {
     id: new_dog.candidato.id,
@@ -67,7 +68,6 @@ export const loadDog = async ({ queryKey }) => {
 
     try {
         const response = await axios.get(dog.image);
-        // console.log(response,'response de la imagen')
         if (response.status !== 200) {
             dog.image = 'https://via.placeholder.com/300x300?text=No+image+found';
         }

@@ -30,12 +30,10 @@ export default function Main() {
     useEffect(() => {
 
         // setLikedDogs(array_accept(usuario.perro_id));
-        // console.log(usuario)
         const asignarPerro = async () => {
             if (usuario && usuario.perro_id === null) {
                 setModalAbierto(true);
             } else {
-                // console.log('else')
                 const perro_user = await obtenerPerro(usuario.perro_id);
                 setPerroUsuario(perro_user);
             }
