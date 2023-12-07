@@ -2,7 +2,7 @@ import clienteAxios from "../util/clienteAxios";
 import { useQuery } from '@tanstack/react-query'
 
 
-const obtenerPerroAleatorio = async () => {
+export const obtenerPerroAleatorio = async () => {
     const { data } = await clienteAxios.get('tinder/random');
     return data;
 }
@@ -17,15 +17,14 @@ export const obtenerPerro = async (perro_id) => {
     return data;
 }
 
-export const obtenerCandidato = async (perro_id) => {
-    const { data } = await clienteAxios.get('tinder/candidatos?perro_interesado_id=' + perro_id);
-    console.log(data)
+export const obtenerCandidato = async () => {
+    const { data } = await clienteAxios.get('tinder/candidatos');
     return data;
 }
 
 
-export const interaccion = async (perro_candidato_id, perro_interesado_id, preferencia) => {
-    const { data } = await clienteAxios.post('tinder/interaccion?perro_interesado_id=' + perro_candidato_id + '&perro_candidato_id=' + perro_interesado_id + '&preferencia=' + preferencia);
+export const interaccion = async (perro_interesado_id, preferencia) => {
+    const { data } = await clienteAxios.post(`tinder/interaccion?perro_candidato_id=${perro_interesado_id}&preferencia=${preferencia}`);
     return data;
 }
 

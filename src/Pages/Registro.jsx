@@ -25,16 +25,11 @@ const Registro = () => {
     }
 
     const onSubmit = async  (data) => {
-        console.log("Datos de registro", data);
-
         if (data.password !== data.confirmPassword) {
             toast.error('Las contraseñas no coinciden');
             return;
         }
-
         await register(data);
-        // const response = await useIniciarSesion(data);
-        // setToken(response.token);
     };
 
     return (

@@ -2,7 +2,9 @@ import axios from "axios";
 import { getToken } from "./usuario";
 
 const clienteAxios = axios.create({
-    baseURL: "http://localhost:8001/api/",
+    // baseURL: "http://localhost:8001/api/",
+    baseURL: "http://localhost:8080/api/",
+
 });
 
 clienteAxios.interceptors.request.use(
@@ -14,7 +16,6 @@ clienteAxios.interceptors.request.use(
         return config;
     },
     function (error) {
-        console.log('error', error);
         if (error.response.status === 401) {
             window.location = "/login";
         }
@@ -36,7 +37,6 @@ clienteAxios.interceptors.response.use(
         return response;
     },
     function (error) {
-        console.log(error);
         if (error.response.status === 401) {
             window.location = "/login";
         } else {

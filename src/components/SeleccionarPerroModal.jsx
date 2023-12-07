@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, Modal, Card, CardMedia, CardActions } from "@mui/material";
-import { obtenerPerro, useObtenerPerroAleatorio, actualizarUsuario } from '../queries/queries';
+import { obtenerPerro, useObtenerPerroAleatorio, actualizarUsuario } from '@queries/queries';
 
 export default function SeleccionarPerroModal({ abierto, cerrarModal, perroActual, setPerroUsuario, actualizarUsuario }) {
     const [perroSeleccionado, setPerroSeleccionado] = useState(perroActual);
 
     // Función para obtener un perro aleatorio
     const cambiarPerro = async () => {
-        const perroAleatorio = useObtenerPerroAleatorio();
-        const perro = await obtenerPerro(perroAleatorio.perro.id)
+        const data = useObtenerPerroAleatorio();
+        const perro = await obtenerPerro(data.perro.id)
         setPerroSeleccionado(perro);
     };
 

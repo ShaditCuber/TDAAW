@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import DogCard from '../components/Mi';
 import Typography from '@mui/material/Typography';
-import { useUsuario } from "../context/AuthContext";
-import { aceptados, actualizarUsuario, interaccion, obtenerCandidato, obtenerPerro, rechazados } from "../queries/queries";
+import { useUsuario } from "@context/AuthContext";
+import { aceptados, actualizarUsuario, interaccion, obtenerPerro, rechazados } from "@queries/queries";
 import {
     Button,
     CircularProgress,
@@ -13,28 +13,37 @@ import {
 } from "@mui/material";
 import { useLoadDog } from '../services/api';
 import SeleccionarPerroModal from '../components/SeleccionarPerroModal';
+import { deleteToken } from '../util/usuario';
 
 export default function Main() {
     const [likedDogs, setLikedDogs] = useState([]);
     const [dislikedDogs, setDislikedDogs] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
     const [shouldRefetch, setShouldRefetch] = useState(false);
-    const [isCat, setIsCat] = useState(false);
+    // const [isCat, setIsCat] = useState(false);
     const [openedDescriptionDog, setOpenedDescriptionDog] = useState(null);
     const [modalAbierto, setModalAbierto] = useState(false);
     // const [dog, setDog] = useState(null);
     let [perroUsuario, setPerroUsuario] = useState(null);
     // const [cargando, setCargando] = useState(false);
-    const { usuario } = useUsuario();
+    const { usuario, logout } = useUsuario();
     // const [error, setError] = useState(null);
 
-    const { data: dog, isLoading, refetch, error } = useLoadDog(usuario.perro_id, isCat);
+
+    const dogUser = async () => {
+        const perro = await obtenerPerro(usuario.perro_id);
+        setPerroUsuario(perro);
+    }
 
     useEffect(() => {
-        // setDog(dog);
-        // setCargando(cargando);
-        console.log(dog);
-    }, [dog, isLoading]);
+        array_accept();
+        array_reject();
+        dogUser();
+    }, []);
+    
+    
+    const { data: dog, isLoading , refetch, error } = useLoadDog();
+
 
     if (isLoading) {
         return <CircularProgress />; // Mostrar indicador de carga
@@ -44,32 +53,33 @@ export default function Main() {
         return <Typography color="error">{error}</Typography>; // Mostrar mensaje de error
     }
 
-    if (!dog) {
-        return <Typography>No hay un perro seleccionado.</Typography>; // Mensaje si no hay perro seleccionado
-    }
+    // if (!dog) {
+    //     return <Typography>No existen mas candidatos</Typography>; 
+    // }
+
+
+   
 
     const onLike = (dog) => {
         if (isFetching) { return }
-        interaccion(usuario.perro_id, dog.id, 'aceptado');
+        interaccion(dog.id, 'aceptado');
         setIsFetching(true);
         // array_accept()
         setLikedDogs((prevDogs) => [dog, ...prevDogs]);
         setTimeout(() => {
             setIsFetching(false);
         }, 1000);
-        setShouldRefetch(true);
     };
 
     const onDislike = (dog) => {
         if (isFetching) { return }
-        interaccion(usuario.perro_id, dog.id, 'rechazado');
+        interaccion(dog.id, 'rechazado');
         setIsFetching(true);
         // array_reject();
         setDislikedDogs((prevDogs) => [dog, ...prevDogs]);
         setTimeout(() => {
             setIsFetching(false);
         }, 1000);
-        setShouldRefetch(true);
     };
 
     async function array_accept() {
@@ -122,23 +132,24 @@ export default function Main() {
         }
     }
 
+    const cerrarSesion = () => {
+        logout();
+    }
 
-    useEffect(() => {
-        // array_accept();
-        // array_reject();
-        if (shouldRefetch) {
-            refetch();
-            setShouldRefetch(false);
-        }
+    // useEffect(() => {
+        
+    //     if (shouldRefetch) {
+    //         refetch();
+    //         setShouldRefetch(false);
+    //     }
 
-    }, [shouldRefetch]);
-
+    // }, [shouldRefetch]);
 
 
+   
 
-    const onChange = () => {
-        setIsCat(!isCat);
-    };
+
+  
 
     const abrirModal = () => {
         setModalAbierto(true);
@@ -163,7 +174,6 @@ export default function Main() {
     };
 
     const actualizarPerroUsuario = async (perroId) => {
-        // Lógica para actualizar el perro del usuario en la base de datos
         await actualizarUsuario(perroId);
         const perroActualizado = await obtenerPerro(perroId);
         setPerroUsuario(perroActualizado);
@@ -189,111 +199,104 @@ export default function Main() {
                         marginBottom: '2em'
                     }}
                 >
-                    Tinder de {isCat ? "Gatitos" : "Perritos"}
+                    Tinder de Perritos
                 </Typography>
-                {/* <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => onChange()}
-                    sx={{
-                        margin: '20px',
-                        borderColor: 'pink',
-                        backgroundColor: 'white',
-                        color: '#D81B60',
-                        '&:hover': {
-                            borderColor: 'green',
-                            backgroundColor: 'green',
-                            color: 'white',
-                            transform: 'scale(1.1)',
-                        },
-                        transition: 'transform 0.3s',
-
-                    }}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={cerrarSesion}
                 >
-                    {isCat ? "Cambiar a Perrito" : "Cambiar a Gatito"}            </Button> */}
-                <Grid
-                    container
-                    spacing={4}
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center">
+                    Cerrar Sesión
+                </Button>
+                {dog ? (
+                    <>
+                        <Grid
+                            container
+                            spacing={4}
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center">
 
-                    <Grid item xs={12} sm={4}>
-                        <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>Candidato</Typography>
-                        <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
-                            {isFetching ? <CircularProgress size="150px" /> :
-                                <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
-                            }
-                        </div>
-                    </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>Candidato</Typography>
+                                <div style={{ width: '40vh', height: '50vh', display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
+                                    {isFetching ? <CircularProgress size="150px" /> :
+                                        <DogCard dog={dog} onLike={onLike} onDislike={onDislike} isFetching={isFetching} setIsFetching={setIsFetching} isMain></DogCard>
+                                    }
+                                </div>
+                            </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                        <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>Me gusta</Typography>
-                        <Box
-                            sx={{
-                                width: '40vh',
-                                height: '50vh',
-                                backgroundColor: 'primary.dark',
-                                '&:hover': {
-                                    backgroundColor: 'primary.main',
-                                    opacity: [0.9, 0.8, 0.7],
-                                },
-                            }}
-                        >
-                            <List
-                                sx={{
-                                    border: '1px solid black',
-                                    width: '100%',
-                                    height: '100%',
-                                    bgcolor: '#F7E0D3',
-                                    position: 'relative',
-                                    overflow: 'auto',
-                                }}
-                                subheader={<li />}
-                            >
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>Me gusta</Typography>
+                                <Box
+                                    sx={{
+                                        width: '40vh',
+                                        height: '50vh',
+                                        backgroundColor: 'primary.dark',
+                                        '&:hover': {
+                                            backgroundColor: 'primary.main',
+                                            opacity: [0.9, 0.8, 0.7],
+                                        },
+                                    }}
+                                >
+                                    <List
+                                        sx={{
+                                            border: '1px solid black',
+                                            width: '100%',
+                                            height: '100%',
+                                            bgcolor: '#F7E0D3',
+                                            position: 'relative',
+                                            overflow: 'auto',
+                                        }}
+                                        subheader={<li />}
+                                    >
 
-                                {likedDogs.map((dog, index) => (
-                                    <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
-                                ))}
+                                        {likedDogs.map((dog, index) => (
+                                            <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'disliked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
+                                        ))}
 
-                            </List>
-                        </Box>
-                    </Grid>
+                                    </List>
+                                </Box>
+                            </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                        <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>No me gusta</Typography>
-                        <Box
-                            sx={{
-                                width: '40vh',
-                                height: '50vh',
-                                backgroundColor: 'primary.dark',
-                                '&:hover': {
-                                    backgroundColor: 'primary.main',
-                                    opacity: [0.9, 0.8, 0.7],
-                                },
-                            }}
-                        >
-                            <List
-                                sx={{
-                                    border: '1px solid black',
-                                    width: '100%',
-                                    height: '100%',
-                                    bgcolor: '#F7E0D3',
-                                    position: 'relative',
-                                    overflow: 'auto',
-                                    '& ul': { padding: 0 },
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>No me gusta</Typography>
+                                <Box
+                                    sx={{
+                                        width: '40vh',
+                                        height: '50vh',
+                                        backgroundColor: 'primary.dark',
+                                        '&:hover': {
+                                            backgroundColor: 'primary.main',
+                                            opacity: [0.9, 0.8, 0.7],
+                                        },
+                                    }}
+                                >
+                                    <List
+                                        sx={{
+                                            border: '1px solid black',
+                                            width: '100%',
+                                            height: '100%',
+                                            bgcolor: '#F7E0D3',
+                                            position: 'relative',
+                                            overflow: 'auto',
+                                            '& ul': { padding: 0 },
 
-                                }}
-                                subheader={<li />}
-                            >
-                                {dislikedDogs.map((dog, index) => (
-                                    <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'liked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
-                                ))}
+                                        }}
+                                        subheader={<li />}
+                                    >
+                                        {dislikedDogs.map((dog, index) => (
+                                            <DogCard key={index} dog={dog} arrepentirse={onArrepentirse} target={'liked'} openedDescriptionDog={openedDescriptionDog} setOpenedDescriptionDog={setOpenedDescriptionDog} />
+                                        ))}
 
-                            </List>
-                        </Box>
-                    </Grid>
-                </Grid>
+                                    </List>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </>)
+                    :
+                    <Typography variant="h5" align="center" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>No existen mas candidatos</Typography>
+                }
                 <Grid container spacing={5} alignItems="center" justifyContent="center" p={5}>
                     <Grid item>
                         <Typography variant="h3" align="center" sx={{ color: 'black', fontWeight: 'bold' }}>Tu Perrito</Typography>
