@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, Modal, Card, CardMedia, CardActions } from "@mui/material";
-import { obtenerPerro, useObtenerPerroAleatorio, actualizarUsuario } from '@queries/queries';
+import { obtenerPerro, obtenerPerroAleatorio, actualizarUsuario } from '@queries/queries';
 
 export default function SeleccionarPerroModal({ abierto, cerrarModal, perroActual, setPerroUsuario, actualizarUsuario }) {
+    
     const [perroSeleccionado, setPerroSeleccionado] = useState(perroActual);
 
-    // Función para obtener un perro aleatorio
-    const cambiarPerro = async () => {
-        const data = useObtenerPerroAleatorio();
-        const perro = await obtenerPerro(data.perro.id)
-        setPerroSeleccionado(perro);
+    const cargarPerroAleatorio = async () => {
+        setPerroSeleccionado(null);
+        const perroAleatorio = await obtenerPerroAleatorio();
+        const perro = await obtenerPerro(perroAleatorio.perro.id)
+        const url_foto = perro.perro.url_foto;
+        const img = new Image();
+        img.src = url_foto;
+        img.onload = () => {
+            setPerroSeleccionado(perro.perro);
+        }
+        img.onerror = () => {
+            cargarPerroAleatorio();
+        }
     };
-
-    // Función para aceptar el perro actual
     const aceptarPerro = async () => {
         if (perroSeleccionado) {
             await actualizarUsuario(perroSeleccionado.perro.id); // Actualiza el perro del usuario
@@ -21,9 +28,10 @@ export default function SeleccionarPerroModal({ abierto, cerrarModal, perroActua
             window.location.reload();
         }
     };
+    
 
     useEffect(() => {
-        cambiarPerro();
+        cargarPerroAleatorio();
     }, []);
 
     return (
@@ -49,17 +57,17 @@ export default function SeleccionarPerroModal({ abierto, cerrarModal, perroActua
                                 objectFit: 'cover',
                                 maxHeight: '600px' // Asegura que la imagen no se salga del card
                             }}
-                            image={perroSeleccionado.perro.url_foto}
-                            alt={`Imagen de ${perroSeleccionado.perro.nombre}`}
+                            image={perroSeleccionado.url_foto}
+                            alt={`Imagen de ${perroSeleccionado.nombre}`}
                         />
                         <Typography gutterBottom variant="h5" component="div" sx={{ padding: '10px' }}>
-                            {perroSeleccionado.perro.nombre}
+                            {perroSeleccionado.nombre}
                         </Typography>
                         <CardActions>
                             <Button size="small" color="primary" onClick={aceptarPerro}>
                                 Aceptar este Perro
                             </Button>
-                            <Button size="small" color="secondary" onClick={cambiarPerro}>
+                            <Button size="small" color="secondary" onClick={cargarPerroAleatorio}>
                                 Ver Otro Perro
                             </Button>
                         </CardActions>

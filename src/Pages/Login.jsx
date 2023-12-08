@@ -27,6 +27,7 @@ const Login = () => {
                 password: data.passwordL
             }
             loginUsuario(result);
+            toast.success('Bienvenido!');
         } else {
             // Lógica de registro
             if (data.password !== data.confirmPassword) {
