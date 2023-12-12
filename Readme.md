@@ -46,3 +46,4 @@ La aplicación estará disponible en [http://localhost:5173](LOCALHOST).
 
 
 ¡Gracias por usar Tinder para Perritos en React! Esperamos que tú y tus amigos peludos encuentren muchas coincidencias divertidas y lindas. 🐾❤️
+
