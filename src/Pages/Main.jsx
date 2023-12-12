@@ -14,6 +14,12 @@ import {
 import { useLoadDog } from '../services/api';
 import SeleccionarPerroModal from '../components/SeleccionarPerroModal';
 import { deleteToken } from '../util/usuario';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 
 export default function Main() {
     const [likedDogs, setLikedDogs] = useState([]);
@@ -28,7 +34,17 @@ export default function Main() {
     // const [cargando, setCargando] = useState(false);
     const { usuario, logout } = useUsuario();
     // const [error, setError] = useState(null);
-
+    const queryClient = useQueryClient();
+    // Crear la mutación
+  const interaccionMutation = useMutation(interaccion, {
+    onSuccess: () => {
+      // Refrescar el candidato después de la interacción
+      queryClient.invalidateQueries("dog");
+    },
+    onError: (error) => {
+      toast.error(`Error al interactuar con el perro: ${error.message}`);
+    },
+  });
 
     const dogUser = async () => {
         const perro = await obtenerPerro(usuario.perro_id);
@@ -58,29 +74,44 @@ export default function Main() {
     // }
 
 
-   
-
-    const onLike = (dog) => {
-        if (isFetching) { return }
-        interaccion(dog.id, 'aceptado');
-        setIsFetching(true);
-        // array_accept()
-        setLikedDogs((prevDogs) => [dog, ...prevDogs]);
-        setTimeout(() => {
+    const onLike = async (dog) => {
+        if (isFetching) {
+          return;
+        }
+    
+        try {
+        const respuesta = await interaccionMutation.mutateAsync({ perro_interesado_id: dog.id, preferencia: 'aceptado' });
+          setIsFetching(true);
+          setLikedDogs((prevDogs) => [dog, ...prevDogs]);
+          const mensajeToast = respuesta.msg === "¡Hay match!" ? respuesta.msg : "¡Perro aceptado con éxito!";
+        toast.success(`${mensajeToast}`, { autoClose: 2000 });
+        } catch (error) {
+          toast.error('Error al aceptar el perro. Por favor, inténtalo de nuevo.');
+        } finally {
+          setTimeout(() => {
             setIsFetching(false);
-        }, 1000);
-    };
+          }, 1000);
+        };
+      };
 
-    const onDislike = (dog) => {
-        if (isFetching) { return }
-        interaccion(dog.id, 'rechazado');
-        setIsFetching(true);
-        // array_reject();
-        setDislikedDogs((prevDogs) => [dog, ...prevDogs]);
-        setTimeout(() => {
+      const onDislike = async (dog) => {
+        if (isFetching) {
+          return;
+        }
+    
+        try {
+          await interaccionMutation.mutateAsync({ perro_interesado_id: dog.id, preferencia: 'rechazado' });
+          setIsFetching(true);
+          setDislikedDogs((prevDogs) => [dog, ...prevDogs]);
+          toast.success('¡Perro rechazado con éxito!', { autoClose: 2000 });
+        } catch (error) {
+          toast.error('Error al rechazar el perro. Por favor, inténtalo de nuevo.');
+        } finally {
+          setTimeout(() => {
             setIsFetching(false);
-        }, 1000);
-    };
+          }, 1000);
+        };
+      };
 
     async function array_accept() {
         try {
@@ -208,6 +239,7 @@ export default function Main() {
                 >
                     Cerrar Sesión
                 </Button>
+                <ToastContainer />
                 {dog ? (
                     <>
                         <Grid

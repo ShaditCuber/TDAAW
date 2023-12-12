@@ -23,8 +23,9 @@ export const obtenerCandidato = async () => {
 }
 
 
-export const interaccion = async (perro_interesado_id, preferencia) => {
-    const { data } = await clienteAxios.post(`tinder/interaccion?perro_candidato_id=${perro_interesado_id}&preferencia=${preferencia}`);
+export const interaccion = async ({perro_interesado_id, preferencia}) => {
+    const { data }  = await clienteAxios.post(`tinder/interaccion?perro_candidato_id=${perro_interesado_id}&preferencia=${preferencia}`);
+    console.log(data);
     return data;
 }
 

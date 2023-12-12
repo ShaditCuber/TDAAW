@@ -3,7 +3,7 @@ import { getToken } from "./usuario";
 
 const clienteAxios = axios.create({
     // baseURL: "http://localhost:8001/api/",
-    baseURL: "http://localhost:8080/api/",
+    baseURL: "http://localhost:8000/api/",
 
 });
 
